@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الدليل الكامل: Stalwart على Hetzner — خطوة خطوة مع نقاط فحص</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1F2ED;--card:#FBFBF8;--ink:#18221E;--ink-soft:#4B584F;--ink-faint:#7B857C;
+    --line:#DCDED6;--line-strong:#C6C9C0;
+    --pine:#1C5A49;--pine-deep:#12463A;--pine-bg:#E3EEE8;
+    --amber:#AF611C;--amber-bg:#F8EBDB;--amber-line:#E6C79E;
+    --red:#B23A2E;--red-bg:#F8E4E1;--red-line:#E7B8B1;
+    --blue:#215E9C;
+    --term-bg:#111C18;--term-ink:#D6E4DD;--term-green:#6FD3AF;--term-dim:#7D9188;--term-amber:#E0A860;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;--sans:'Readex Pro',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.85;font-weight:300;-webkit-font-smoothing:antialiased}
+  .tok,.num{font-family:var(--mono);direction:ltr;unicode-bidi:isolate;font-weight:500;font-size:.85em;background:rgba(24,34,30,.05);border:1px solid var(--line);border-radius:5px;padding:.05em .38em;white-space:nowrap}
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px}
+  strong{font-weight:600}
+
+  header{padding:60px 0 30px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.05em;color:var(--pine);background:var(--pine-bg);display:inline-block;padding:5px 12px;border-radius:20px;margin-bottom:18px}
+  h1{font-size:clamp(1.8rem,4.6vw,2.9rem);font-weight:700;line-height:1.25;letter-spacing:-.01em;margin-bottom:14px}
+  h1 .u{color:var(--pine)}
+  .sub{font-size:clamp(1rem,2vw,1.16rem);color:var(--ink-soft);max-width:640px}
+
+  .toc{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+  .toc h4{font-family:var(--mono);font-size:12px;color:var(--ink-faint);letter-spacing:.05em;margin-bottom:12px}
+  .toc ol{list-style:none;counter-reset:t;columns:2;column-gap:24px}
+  @media (max-width:620px){.toc ol{columns:1}}
+  .toc li{counter-increment:t;margin-bottom:7px;break-inside:avoid}
+  .toc a{text-decoration:none;color:var(--ink);font-size:.92rem;font-weight:400;display:flex;gap:8px;align-items:baseline}
+  .toc a:hover{color:var(--pine)}
+  .toc a::before{content:counter(t);font-family:var(--mono);font-size:.75rem;color:var(--pine);font-weight:600;background:var(--pine-bg);width:22px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+
+  main{padding:10px 0 40px}
+  .phase{padding:44px 0 8px;border-top:1px solid var(--line)}
+  .ph-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:8px}
+  .ph-n{font-family:var(--mono);font-weight:600;color:#fff;background:var(--pine);min-width:46px;height:46px;padding:0 8px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;direction:ltr;font-size:1.05rem}
+  .ph-head h2{font-size:clamp(1.35rem,3vw,1.9rem);font-weight:600;line-height:1.32;padding-top:6px}
+  .ph-sub{color:var(--ink-soft);margin:0 0 18px;font-weight:400}
+  h3{font-size:1.14rem;font-weight:600;margin:24px 0 10px}
+  p{margin-bottom:13px}
+  .phase ul.b{list-style:none;margin:6px 0 14px}
+  .phase ul.b li{padding-inline-start:20px;position:relative;margin-bottom:9px;font-weight:400}
+  .phase ul.b li::before{content:"";position:absolute;inset-inline-start:0;top:.72em;width:7px;height:7px;border-radius:2px;background:var(--pine)}
+  ol.steps{counter-reset:s;list-style:none;margin:8px 0 14px}
+  ol.steps li{counter-increment:s;padding-inline-start:36px;font-weight:400;margin-bottom:12px;position:relative}
+  ol.steps li::before{content:counter(s);position:absolute;inset-inline-start:0;top:1px;width:24px;height:24px;background:var(--pine);color:#fff;border-radius:7px;font-family:var(--mono);font-size:.74rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+
+  /* terminal */
+  .term{background:var(--term-bg);border-radius:12px;margin:10px 0 16px;overflow:hidden;border:1px solid #24352E}
+  .term-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:#0C1511;border-bottom:1px solid #24352E}
+  .term-bar .ttl{font-family:var(--mono);font-size:11px;color:var(--term-dim);letter-spacing:.03em}
+  .term-bar .cp{font-family:var(--mono);font-size:11px;color:var(--term-green);background:transparent;border:1px solid #2C4239;border-radius:6px;padding:3px 10px;cursor:pointer}
+  .term-bar .cp:hover{background:#182821}
+  pre{margin:0;padding:16px 18px;overflow-x:auto;direction:ltr;text-align:left}
+  pre code{font-family:var(--mono);font-size:.82rem;line-height:1.75;color:var(--term-ink);white-space:pre}
+  .c-dim{color:var(--term-dim)} .c-grn{color:var(--term-green)} .c-amb{color:var(--term-amber)}
+
+  /* callouts */
+  .box{border-radius:12px;padding:18px 20px;margin:16px 0;border:1px solid var(--line)}
+  .box .bt{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.05em;margin-bottom:9px;display:flex;align-items:center;gap:8px}
+  .box p{margin-bottom:7px;font-weight:400;font-size:.96rem}
+  .box p:last-child{margin-bottom:0}
+  .box.warn{background:var(--amber-bg);border-color:var(--amber-line)} .box.warn .bt{color:var(--amber)} .box.warn .bt::before{content:"⚠";font-size:1rem}
+  .box.danger{background:var(--red-bg);border-color:var(--red-line)} .box.danger .bt{color:var(--red)} .box.danger .bt::before{content:"☠";font-size:1rem}
+  .box.tip{background:var(--pine-bg);border-color:#BEDCCF} .box.tip .bt{color:var(--pine)} .box.tip .bt::before{content:"✔"}
+  .box.loc{background:#EAF0F6;border-color:#C4D6E8} .box.loc .bt{color:var(--blue)} .box.loc .bt::before{content:"📍"}
+  .box ul{list-style:none;margin-top:4px}
+  .box li{padding-inline-start:18px;position:relative;margin-bottom:7px;font-size:.95rem;font-weight:400}
+  .box li::before{content:"";position:absolute;inset-inline-start:0;top:.7em;width:6px;height:6px;border-radius:50%}
+  .box.warn li::before{background:var(--amber)} .box.danger li::before{background:var(--red)} .box.tip li::before{background:var(--pine)} .box.loc li::before{background:var(--blue)}
+
+  /* checkpoint */
+  .check{background:linear-gradient(180deg,#E9F3EE,#E2EFE8);border:2px solid var(--pine);border-radius:14px;padding:20px 22px;margin:20px 0}
+  .check .ct{font-weight:700;color:var(--pine-deep);font-size:1.05rem;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+  .check .ct::before{content:"✓";background:var(--pine);color:#fff;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex:none}
+  .check ul{list-style:none;margin-bottom:12px}
+  .check li{padding-inline-start:26px;position:relative;margin-bottom:9px;font-weight:400;font-size:.97rem}
+  .check li::before{content:"";position:absolute;inset-inline-start:0;top:2px;width:18px;height:18px;border:2px solid var(--pine);border-radius:5px}
+  .check .fail{background:#fff;border:1px solid var(--red-line);border-radius:10px;padding:12px 14px;font-size:.92rem;font-weight:400;color:#7a2c22}
+  .check .fail b{color:var(--red);font-weight:600}
+
+  /* glossary */
+  .gloss{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+  @media (max-width:620px){.gloss{grid-template-columns:1fr}}
+  .gloss .g{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+  .gloss .g .term-w{font-family:var(--mono);font-weight:600;color:var(--pine);direction:ltr;font-size:.9rem;margin-bottom:3px}
+  .gloss .g .d{font-size:.9rem;color:var(--ink-soft);font-weight:400}
+
+  /* diagram */
+  .diagram{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 16px 10px;margin:18px 0}
+  .diagram svg{width:100%;height:auto;display:block}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;padding:12px 4px 4px;font-size:.85rem;color:var(--ink-soft)}
+  .legend span{display:flex;align-items:center;gap:7px}
+  .legend .d{width:20px;height:3px;border-radius:2px;flex:none}
+
+  table.cmp{width:100%;border-collapse:collapse;font-size:.9rem;margin:12px 0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  table.cmp th,table.cmp td{padding:12px 15px;text-align:right;border-bottom:1px solid var(--line);vertical-align:top;font-weight:400}
+  table.cmp thead th{background:var(--pine-deep);color:#fff;font-weight:500;font-size:.85rem}
+  table.cmp td.k{font-weight:600;width:26%}
+  table.cmp tbody tr:last-child td{border-bottom:0}
+
+  footer{padding:30px 0 60px;color:var(--ink-faint);font-size:.85rem;border-top:1px solid var(--line);margin-top:30px}
+  a{color:var(--pine)}
+  :focus-visible{outline:2.5px solid var(--pine);outline-offset:3px;border-radius:4px}
+  @media (max-width:520px){.ph-n{min-width:40px;height:40px}.wrap{padding:0 18px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="eyebrow">الدليل النهائي · إعداد من الصفر</span>
+    <h1>Stalwart على Hetzner —<br><span class="u">خطوة خطوة، مع فحص بعد كل خطوة</span></h1>
+    <p class="sub">القاعدة الذهبية بهالدليل: <strong>لا تنتقل لأي خطوة إلا إذا نجحت نقطة الفحص اللي قبلها.</strong> إذا فشل إشي، نوقف ونصلّحه — مو نكمّل ونتراكم الأخطاء. مبني على أخطاء إعدادك السابق حتى ما تتكرر.</p>
+    <nav class="toc">
+      <h4>المحتوى</h4>
+      <ol>
+        <li><a href="#p0">المفاهيم والمصطلحات</a></li>
+        <li><a href="#p1">إنشاء سيرفر Hetzner</a></li>
+        <li><a href="#p2">سجل DNS الأساسي</a></li>
+        <li><a href="#p3">الجدار الناري والتحديث</a></li>
+        <li><a href="#p4">تنصيب Stalwart</a></li>
+        <li><a href="#p5">توكن Cloudflare + التحقق منه</a></li>
+        <li><a href="#p6">معالج الإعداد (٥ خطوات)</a></li>
+        <li><a href="#p7">فحص الشهادة (الأهم)</a></li>
+        <li><a href="#p8">فحص سجلات الدومين</a></li>
+        <li><a href="#p9">إنشاء أول حساب وفتح البريد</a></li>
+        <li><a href="#p10">اختبار الإرسال والاستقبال</a></li>
+        <li><a href="#diag">تشخيص: بستقبل بس ما برسل</a></li>
+        <li><a href="#p11">الربط مع Gmail والأجهزة</a></li>
+        <li><a href="#p12">باقي الدومينات + warmup</a></li>
+      </ol>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- P0 CONCEPTS -->
+  <section class="phase" id="p0">
+    <div class="ph-head"><div class="ph-n">٠</div><h2>المفاهيم والمصطلحات (اقرأ قبل ما تبلّش)</h2></div>
+    <p class="ph-sub">أغلب المشاكل اللي صارت معك سببها الخلط بين مفهومين. خمس دقايق هون بيوفّروا عليك ساعات.</p>
+
+    <h3>القاعدة الأهم: اسم السيرفر ≠ دومينات البريد</h3>
+    <table class="cmp">
+      <thead><tr><th>&nbsp;</th><th>اسم السيرفر (Hostname)</th><th>دومين البريد (Email Domain)</th></tr></thead>
+      <tbody>
+        <tr><td class="k">شو هو</td><td>اسم الجهاز/السيرفر نفسه</td><td>الدومين اللي الناس بياخدوا عناوين عليه</td></tr>
+        <tr><td class="k">مثال</td><td class="mono" style="font-family:var(--mono);direction:ltr">mail.techkahwa.net</td><td class="mono" style="font-family:var(--mono);direction:ltr">techkahwa.net</td></tr>
+        <tr><td class="k">كم واحد</td><td><strong>واحد فقط</strong> لكل السيرفر</td><td><strong>عشرين</strong> (كل دوميناتك)</td></tr>
+        <tr><td class="k">في عنوان بريد عليه؟</td><td>لأ — ما حدا إيميله <span class="tok">@mail.techkahwa.net</span></td><td>نعم — <span class="tok">ehab@techkahwa.net</span></td></tr>
+        <tr><td class="k">سجلاته</td><td>A (→ IP) + PTR (عكسي)</td><td>MX + SPF + DKIM + DMARC</td></tr>
+        <tr><td class="k">وظيفته</td><td>عنوان الاتصال للعملاء + الشهادة + توقيع SMTP</td><td>هوية البريد وحمايته من السبام</td></tr>
+      </tbody>
+    </table>
+    <div class="box tip">
+      <div class="bt">التشبيه</div>
+      <p>اسم السيرفر = <strong>عنوان مبنى مكتب البريد</strong> (واحد). دومينات البريد = <strong>الشركات الـ٢٠</strong> اللي مكتب البريد بيدير مراسلاتهم. كل الشركات بتقول «وصّلوا بريدنا لهذا المكتب» عبر سجل MX.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 680 372" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="اسم سيرفر واحد يخدم عشرين دومين، مع سجل A و PTR">
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <g font-family="IBM Plex Mono, monospace">
+        <rect x="40" y="52" width="176" height="42" rx="8" fill="#EEEFE9" stroke="#B4B2A9"/><text x="128" y="78" text-anchor="middle" font-size="13" fill="#444441">techkahwa.net</text>
+        <rect x="40" y="106" width="176" height="42" rx="8" fill="#EEEFE9" stroke="#B4B2A9"/><text x="128" y="132" text-anchor="middle" font-size="13" fill="#444441">domain2.com</text>
+        <rect x="40" y="160" width="176" height="42" rx="8" fill="#EEEFE9" stroke="#B4B2A9"/><text x="128" y="186" text-anchor="middle" font-size="13" fill="#444441">domain3.com</text>
+        <rect x="40" y="214" width="176" height="42" rx="8" fill="#EEEFE9" stroke="#B4B2A9"/></g>
+        <text x="128" y="240" text-anchor="middle" font-size="13" fill="#444441" font-family="Readex Pro, sans-serif">… ×٢٠ دومين بريد</text>
+        <text x="256" y="46" text-anchor="middle" font-size="12" fill="#5F5E5A" font-family="IBM Plex Mono, monospace">MX</text>
+        <line x1="216" y1="73" x2="322" y2="135" stroke="#888780" stroke-width="1.5" marker-end="url(#ar)"/>
+        <line x1="216" y1="127" x2="322" y2="145" stroke="#888780" stroke-width="1.5" marker-end="url(#ar)"/>
+        <line x1="216" y1="181" x2="322" y2="155" stroke="#888780" stroke-width="1.5" marker-end="url(#ar)"/>
+        <line x1="216" y1="235" x2="322" y2="165" stroke="#888780" stroke-width="1.5" marker-end="url(#ar)"/>
+        <rect x="326" y="116" width="226" height="72" rx="10" fill="#E1F5EE" stroke="#0F6E56"/>
+        <text x="439" y="148" text-anchor="middle" font-size="14" fill="#04342C" font-family="IBM Plex Mono, monospace" font-weight="500">mail.techkahwa.net</text>
+        <text x="439" y="169" text-anchor="middle" font-size="12" fill="#0F6E56" font-family="Readex Pro, sans-serif">اسم السيرفر — واحد فقط</text>
+        <line x1="414" y1="192" x2="414" y2="276" stroke="#1D9E75" stroke-width="1.8" marker-end="url(#ar)"/>
+        <text x="405" y="238" text-anchor="end" font-size="12" fill="#0F6E56" font-family="IBM Plex Mono, monospace" font-weight="500">A</text>
+        <line x1="464" y1="276" x2="464" y2="192" stroke="#C2542E" stroke-width="1.8" marker-end="url(#ar)"/>
+        <text x="475" y="238" text-anchor="start" font-size="12" fill="#993C1D" font-family="IBM Plex Mono, monospace" font-weight="500">PTR</text>
+        <rect x="369" y="280" width="140" height="48" rx="8" fill="#E6F1FB" stroke="#185FA5"/>
+        <text x="439" y="300" text-anchor="middle" font-size="13" fill="#042C53" font-family="Readex Pro, sans-serif" font-weight="500">IP السيرفر</text>
+        <text x="439" y="318" text-anchor="middle" font-size="12" fill="#185FA5" font-family="IBM Plex Mono, monospace">91.98.194.24</text>
+        <text x="439" y="354" text-anchor="middle" font-size="12" fill="#5F5E5A" font-family="Readex Pro, sans-serif">الـA من Cloudflare · الـPTR من لوحة Hetzner</text>
+      </svg>
+      <div class="legend">
+        <span><span class="d" style="background:#888780"></span> MX: الدومين ← السيرفر</span>
+        <span><span class="d" style="background:#1D9E75"></span> A: الاسم ← الـIP</span>
+        <span><span class="d" style="background:#C2542E"></span> PTR: الـIP ← الاسم</span>
+      </div>
+    </div>
+
+    <h3>قاموس المصطلحات السريع</h3>
+    <div class="gloss">
+      <div class="g"><div class="term-w">DNS</div><div class="d">دليل الإنترنت اللي بيحوّل الأسماء لعناوين IP.</div></div>
+      <div class="g"><div class="term-w">A record</div><div class="d">بيربط اسم بعنوان IP (mail → 91.98.194.24).</div></div>
+      <div class="g"><div class="term-w">MX record</div><div class="d">بيقول لأي سيرفر يوصل بريد هذا الدومين.</div></div>
+      <div class="g"><div class="term-w">PTR / Reverse DNS</div><div class="d">العكس: بيحوّل الـIP لاسم. بتظبطه عند Hetzner فقط.</div></div>
+      <div class="g"><div class="term-w">SPF</div><div class="d">سجل بيحدد مين مسموح يرسل باسم دومينك.</div></div>
+      <div class="g"><div class="term-w">DKIM</div><div class="d">توقيع تشفيري على رسائلك يمنع التلاعب فيها.</div></div>
+      <div class="g"><div class="term-w">DMARC</div><div class="d">سياسة بتقول للمستقبِل شو يعمل بالرسائل المشبوهة.</div></div>
+      <div class="g"><div class="term-w">TLS / SSL</div><div class="d">التشفير اللي بيحمي الاتصال. يحتاج «شهادة».</div></div>
+      <div class="g"><div class="term-w">ACME / Let's Encrypt</div><div class="d">نظام يجيب شهادة TLS مجانية تلقائياً.</div></div>
+      <div class="g"><div class="term-w">IMAP (993)</div><div class="d">بروتوكول استقبال/مزامنة البريد للعميل.</div></div>
+      <div class="g"><div class="term-w">SMTP (587/465)</div><div class="d">بروتوكول إرسال البريد.</div></div>
+      <div class="g"><div class="term-w">Port (منفذ)</div><div class="d">رقم «الباب» اللي بيسمع عليه كل بروتوكول.</div></div>
+    </div>
+
+    <div class="box danger">
+      <div class="bt">أسوأ السيناريوهات — وكيف نتفاداها من البداية</div> إذا فشلت الشهادة بصمت وأعادت المحاولة كتير (مشكلة معروفة بـv0.16). <strong>الوقاية:</strong> نتحقق من توكن Cloudflare باستقلال قبل ما نشغّل ACME (خطوة ٥).</li>
+        <li><strong>البريد يروح سبام:</strong> بسبب PTR ناقص أو سمعة IP جديدة. <strong>الوقاية:</strong> نضبط PTR أول شي، ونبعت بالتدريج (خطوة ١٢).</li>
+        <li><strong>Cloudflare Proxy يكسر البريد:</strong> السحابة البرتقالية بتحجب منافذ البريد وتخفي الـIP. <strong>الوقاية:</strong> سجل البريد دايماً <strong>رمادي (DNS only)</strong>.</li>
+        <li><strong>تنحبس برّا اللوحة:</strong> لو ضاعت كلمة سر الأدمن. <strong>الوقاية:</strong> نثبّت <span class="tok">STALWART_RECOVERY_ADMIN</span> (خطوة ٤).</li>
+        <li><strong>سجل A على IP غلط:</strong> بيكسر كل شي (شهادة + MX + دخول اللوحة). <strong>الوقاية:</strong> نتأكد الـA يرجّع IP سيرفرك بالضبط (خطوة ٢) — هاد اللي وقّعك فعلياً.</li>
+    <div class="box loc">
+      <div class="bt">أدوات الفحص الثلاثة — احفظها، بتحتاجها بكل خطوة</div>
+      <ul>
+        <li><strong>فحص المنافذ (مفتوح/مسكّر):</strong> <span class="tok">check-host.net/check-tcp?host=mail.techkahwa.net:993</span> — بدّل الرقم لأي منفذ. بيفحص من عدة مواقع بالعالم.</li>
+        <li><strong>فحص الشهادة (TLS):</strong> <span class="tok">ssllabs.com/ssltest</span> — بيوريك اسم الشهادة وصلاحيتها وإذا مطابقة لاسم السيرفر.</li>
+        <li><strong>فحص سجلات البريد والسمعة:</strong> <span class="tok">mail-tester.com</span> — ابعتله إيميل، بيعطيك علامة /10 مع SPF/DKIM/DMARC وblacklist.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- P1 SERVER -->
+  <section class="phase" id="p1">
+    <div class="ph-head"><div class="ph-n">١</div><h2>إنشاء سيرفر Hetzner من جديد</h2></div>
+    <ol class="steps">
+      <li>احذف السيرفر القديم إذا بدك بداية نظيفة (Cloud Console → Servers → Delete).</li>
+      <li>أنشئ سيرفر جديد: <span class="tok">CAX21</span> (4 vCPU / 8GB / 80GB) · <span class="tok">Ubuntu 24.04</span> · موقع أوروبي · مع مفتاح SSH.</li>
+      <li>بعد الإنشاء: <strong>Server → Networking → Reverse DNS (PTR)</strong> ← للـIPv4 اكتب <span class="tok">mail.techkahwa.net</span> ← احفظ.</li>
+    </ol>
+    <div class="box loc">
+      <div class="bt">وين بالضبط</div>
+      <p>الـPTR مو سجل بتضيفه بـCloudflare — بتعبّي خانة جاهزة بلوحة Hetzner جنب الـIP. القيمة = اسم السيرفر <span class="tok">mail.techkahwa.net</span> (اسم فقط، مو IP).</p>
+    </div>
+    <div class="check">
+      <div class="ct">نقطة فحص ١</div>
+      <ul>
+        <li>السيرفر شغّال وأخدت الـIP تبعه.</li>
+        <li>حطيت الـPTR بلوحة Hetzner = <span class="tok">mail.techkahwa.net</span>.</li>
+        <li>قدرت تعمل <span class="tok">ssh root@YOUR_IP</span> ودخلت.</li>
+      </ul>
+      <div class="fail"><b>إذا ما دخلت SSH:</b> تأكد من مفتاح SSH ومن الـIP. لا تكمّل قبل ما تدخل.</div>
+    </div>
+  </section>
+
+  <!-- P2 DNS -->
+  <section class="phase" id="p2">
+    <div class="ph-head"><div class="ph-n">٢</div><h2>سجل DNS الأساسي (قبل التنصيب)</h2></div>
+    <p class="ph-sub">لازم اسم السيرفر يأشّر على الـIP <strong>قبل</strong> ما نطلب الشهادة — وإلا بتفشل.</p>
+    <div class="box loc">
+      <div class="bt">بـCloudflare</div>
+      <ul>
+        <li>الدومين <span class="tok">techkahwa.net</span> → DNS → Add record</li>
+        <li>Type: <span class="tok">A</span> · Name: <span class="tok">mail</span> · IPv4: <span class="tok">YOUR_SERVER_IP</span></li>
+        <li>Proxy status: <strong>DNS only (سحابة رمادية) — مو برتقالية</strong></li>
+      </ul>
+    </div>
+    <div class="box danger">
+      <div class="bt">الخطأ اللي وقّعك فعلياً — تأكد منه بالذات</div>
+      <p>بإعدادك السابق سجل <span class="tok">mail</span> كان يأشّر على IP <strong>غلط</strong> (<span class="tok">95.217.238.7</span>) والسحابة <strong>برتقالية</strong> — عشان هيك SSL Labs شاف عناوين Cloudflare، والشهادة فشلت، والدخول للّوحة فشل (كنت توصل مكان تاني مو سيرفرك).</p>
+      <ul>
+        <li>الـIP الصحيح لسيرفرك: <span class="tok">91.98.194.24</span></li>
+        <li>سجل <span class="tok">mail</span> = <span class="tok">A</span> → <span class="tok">91.98.194.24</span> بالضبط</li>
+        <li>السحابة <strong>رمادية (DNS only)</strong> — تأكد بعينك</li>
+      </ul>
+      <p>لو الاسم بيأشّر على IP غلط، <strong>كل شي بينهار</strong>: لا شهادة، لا MX، لا دخول للّوحة. هاي أول شي تتأكد منه.</p>
+    </div>
+    <div class="box warn">
+      <div class="bt">ليش رمادي إجباري</div>
+      <p>السحابة البرتقالية (Proxy) بتمرّر بس HTTP/HTTPS على منافذ محددة، وبتخفي الـIP الحقيقي — بتكسر منافذ البريد (25/587/993) وبتمنع Let's Encrypt من الوصول. هاد بالضبط سبب خطأ الـ<span class="tok">408</span> اللي صار معك.</p>
+    </div>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">تحقق من الـDNS</span><button class="cp">نسخ</button></div>
+<pre><code>dig +short A mail.techkahwa.net       <span class="c-dim"># لازم يرجّع IP سيرفرك (91.98.194.24)</span>
+dig +short -x YOUR_SERVER_IP          <span class="c-dim"># لازم يرجّع mail.techkahwa.net (PTR)</span>
+
+<span class="c-dim"># لو ظهرت عناوين غريبة (104.x أو 172.x) = السحابة برتقالية، طفّيها</span></code></pre>
+    </div>
+    <div class="box warn">
+      <div class="bt">لو ما بتقدر تدخل اللوحة أصلاً</div>
+      <p>طول ما سجل <span class="tok">mail</span> غلط، ادخل اللوحة بالـIP المباشر بدل الاسم:</p>
+      <p><span class="tok">http://91.98.194.24:8080/admin</span></p>
+    </div>
+    <div class="check">
+      <div class="ct">نقطة فحص ٢</div>
+      <ul>
+        <li><span class="tok">dig A</span> بيرجّع <strong>IP سيرفرك بالضبط</strong> (<span class="tok">91.98.194.24</span>) — مو أي IP تاني.</li>
+        <li><span class="tok">dig -x</span> بيرجّع <span class="tok">mail.techkahwa.net</span>.</li>
+        <li>سحابة سجل <span class="tok">mail</span> بـCloudflare <strong>رمادية</strong>.</li>
+      </ul>
+      <div class="fail"><b>إذا رجّع IP غلط (مثل 95.x أو 104.x أو 172.x):</b> عدّل سجل A ليأشّر على <span class="tok">91.98.194.24</span> وطفّي السحابة. <b>هاي أهم نقطة بالدليل كله</b> — لا تكمّل قبل ما الـA يرجّع IP سيرفرك الصحيح.</div>
+    </div>
+  </section>
+
+  <!-- P3 FIREWALL -->
+  <section class="phase" id="p3">
+    <div class="ph-head"><div class="ph-n">٣</div><h2>الجدار الناري والتحديث</h2></div>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">update + hostname</span><button class="cp">نسخ</button></div>
+<pre><code>apt update &amp;&amp; apt -y upgrade
+hostnamectl set-hostname mail.techkahwa.net
+timedatectl set-timezone UTC</code></pre>
+    </div>
+    <div class="box danger">
+      <div class="bt">في طبقتين حماية — بس اختار وحدة</div>
+      <p>هاد اللي عطّلك سابقاً. في طبقتين منفصلتين، ولو استعملت الاثنين بقواعد مختلفة بينحجب المنفذ عند أي وحدة:</p>
+      <ul>
+        <li><strong>Hetzner Cloud Firewall</strong> — على مستوى شبكة Hetzner (من الـConsole). <strong>الموصى به.</strong></li>
+        <li><strong>ufw</strong> — على السيرفر نفسه (بالأوامر). بديل.</li>
+      </ul>
+      <p><strong>اختار وحدة بس.</strong> المشكلة سابقاً إنك فتحت 993 بـufw بس Hetzner كان حاجبه — لأنه المنفذ لازم مفتوح عند الجدار الفعّال. الحل: جدار واحد يكون المرجع، مش الاثنين.</p>
+    </div>
+
+    <h3>افهم المنافذ أول: مين بيستعملها وبأي اتجاه</h3>
+    <p>كل منفذ إله <strong>اتجاهين منفصلين</strong>: <strong>وارد</strong> (مين بيتصل بسيرفرك) و<strong>صادر</strong> (سيرفرك بيتصل بمين). أغلب المنافذ بتحتاج <strong>وارد بس</strong>. منفذ واحد بس بيحتاج الاتجاهين — وهو سبب مشكلة «ما عم برسل».</p>
+    <table class="cmp">
+      <thead><tr><th>المنفذ</th><th>مين بيستعمله</th><th>الاتجاه المطلوب</th><th>ضروري؟</th></tr></thead>
+      <tbody>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">25</td><td><strong>سيرفر ↔ سيرفر</strong> (Gmail/Outlook يوصّلولك · وسيرفرك يوصّلهم)</td><td><strong>وارد + صادر</strong></td><td>✅ جوهري — الصادر هو المحجوب عند Hetzner</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">465</td><td>عملاؤك <strong>يرسلوا</strong> (Thunderbird/موبايل → سيرفرك) — SSL مباشر</td><td>وارد بس</td><td>✅ الأساسي للإرسال من العملاء</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">587</td><td>عملاؤك <strong>يرسلوا</strong> — STARTTLS (بديل 465)</td><td>وارد بس</td><td>اختياري — 465 بيغني عنه</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">993</td><td>عملاؤك <strong>يستقبلوا/يزامنوا</strong> — IMAP (SSL)</td><td>وارد بس</td><td>✅ الأساسي للاستقبال</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">995</td><td>عملاؤك <strong>يستقبلوا</strong> — POP3 (SSL)</td><td>وارد بس</td><td>⭐ ضروري لربط Gmail (POP3)</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">143</td><td>IMAP بـSTARTTLS (بديل 993)</td><td>وارد بس</td><td>اختياري — 993 بيغني عنه</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">4190</td><td>إدارة قواعد الفرز (Sieve) من العميل</td><td>وارد بس</td><td>مفيد</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">443</td><td>اللوحة + webmail + JMAP + الشهادة</td><td>وارد بس</td><td>✅ جوهري</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">80</td><td>تحويل HTTP + شهادة احتياطي</td><td>وارد بس</td><td>مفيد</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">22</td><td>SSH (إدارتك للسيرفر)</td><td>وارد بس</td><td>✅</td></tr>
+      </tbody>
+    </table>
+    <div class="box tip">
+      <div class="bt">الخلاصة اللي بتفك الحيرة</div>
+      <ul>
+        <li><strong>الإرسال لبرّا</strong> (لـGmail) = <strong>صادر 25 حصراً</strong>. ما إله بديل. هاد المحجوب.</li>
+        <li><strong>465/587</strong> ما لهن علاقة بالإرسال لبرّا — هنن بس باب <strong>عملائك</strong> يوصّلولك رسايلهم. 465 كافي، انسَ 587.</li>
+        <li><strong>993/995</strong> = بابين <strong>عملائك</strong> يستقبلوا. 993 للبرامج، 995 لربط Gmail.</li>
+      </ul>
+    </div>
+
+    <h3>حجب Hetzner التلقائي (اللي وقّعك) + كيف تطلب الفك</h3>
+    <div class="box danger">
+      <div class="bt">Hetzner بيحجب 25 · 465 · 587 الصادرة تلقائياً</div>
+      <p>على الحسابات/السيرفرات الجديدة، Hetzner بيحجب منافذ البريد <strong>الصادرة</strong> (25, 465, 587) افتراضياً كمكافحة سبام — بدون ما يعلمك. عشان هيك بتقدر تستقبل بس ما بتقدر ترسل لبرّا.</p>
+      <p><strong>كيف تطلب الفك (الرابط المباشر):</strong></p>
+      <ul>
+        <li>روح على <span class="tok">console.hetzner.com/limits</span></li>
+        <li>اضغط <strong>Request change → Unblock Ports</strong></li>
+        <li>اكتب رسالة مختصرة إنك تشغّل mail server شرعي (نموذج بخطوة ١٠)</li>
+        <li>بعض الحسابات بينفك <strong>تلقائياً خلال دقائق</strong>؛ غيرها بيراجعوه يدوي.</li>
+      </ul>
+    </div>
+
+    <h3>تفعيل منفذ 587 (اختياري — لعملاء STARTTLS)</h3>
+    <p>Stalwart بيجي مفعّل عليه 465/993 (implicit TLS) بس افتراضياً، ومو مشغّل 587/143 (STARTTLS). لو عندك عملاء أو برامج بتتوقع 587 تحديداً (شائع بالشركات)، فعّله هيك:</p>
+    <div class="box loc">
+      <div class="bt">باللوحة: Settings → Network → Listeners → Create</div>
+      <ul>
+        <li><strong>ID:</strong> <span class="tok">submission</span></li>
+        <li><strong>Protocol:</strong> <span class="tok">smtp</span></li>
+        <li><strong>Bind:</strong> <span class="tok">[::]:587</span></li>
+        <li><strong>Implicit TLS:</strong> <strong>OFF</strong> (587 بيستعمل STARTTLS، مو تشفير مباشر)</li>
+        <li>احفظ</li>
+      </ul>
+    </div>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">أعد التحميل وتأكد</span><button class="cp">نسخ</button></div>
+<pre><code>systemctl restart stalwart
+ss -tlnp | grep ':587'     <span class="c-dim"># لازم يظهر LISTEN</span></code></pre>
+    </div>
+    <p>بعدها افتحه بالجدارين: <span class="tok">ufw allow 587/tcp</span> + قاعدة Inbound TCP 587 بـHetzner Cloud Firewall.</p>
+    <div class="box warn">
+      <div class="bt">587 ≠ حل مشكلة الإرسال لبرّا</div>
+      <p>587 هو باب دخول رسائل <strong>عملائك</strong> لسيرفرك (وارد). الإرسال لبرّا (لـGmail) بيمرّ على <span class="tok">25 الصادر</span> — فتفعيل 587 ما بيغيّر شي بموضوع الحجب. الاتنين منفصلين: 587 لراحة عملائك، وفك 25 الصادر لتوصيل البريد فعلياً.</p>
+    </div>
+
+    <h3>جدول منافذ الجدار الناري (Inbound)</h3>
+    <table class="cmp">
+      <thead><tr><th>Port</th><th>الوظيفة</th><th>الاتجاه</th></tr></thead>
+      <tbody>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">22</td><td>SSH</td><td>Inbound</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">25</td><td>SMTP — استقبال + إرسال لبرّا</td><td>Inbound + <strong>Outbound (حاسم)</strong></td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">80</td><td>HTTP (شهادة احتياطي)</td><td>Inbound</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">143</td><td>IMAP (STARTTLS)</td><td>Inbound</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">443</td><td>HTTPS + اللوحة + webmail</td><td>Inbound</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">465</td><td>إرسال (SSL مباشر)</td><td>Inbound</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">587</td><td>إرسال (STARTTLS)</td><td>Inbound</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">993</td><td>IMAPS — استقبال (مهم للموبايل)</td><td>Inbound</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">995</td><td>POP3S — استقبال</td><td>Inbound</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">4190</td><td>ManageSieve (قواعد الفرز)</td><td>Inbound</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">8080</td><td>لوحة مؤقتة (bootstrap)</td><td>Inbound</td></tr>
+      </tbody>
+    </table>
+
+    <h3>الطبقة ١ — Hetzner Cloud Firewall (من الـConsole)</h3>
+    <div class="box loc">
+      <div class="bt">Cloud Console → Firewalls</div>
+      <ul>
+        <li><strong>Inbound:</strong> أضف قاعدة لكل منفذ من الجدول فوق: <span class="tok">22, 25, 80, 143, 443, 465, 587, 993, 995, 4190, 8080</span> (TCP · Any IPv4 · Any IPv6).</li>
+        <li><strong>Outbound:</strong> خليه <strong>فاضي (Nothing)</strong> — لما يكون فاضي معناه كل الصادر مسموح تلقائياً. ما تلمسه.</li>
+      </ul>
+    </div>
+    <div class="box warn">
+      <div class="bt">مهم عن الـOutbound ومنفذ 25</div>
+      <p>مو لازم تفتح شي بالـOutbound — الفاضي = سماح كامل. بس <strong>انتبه:</strong> حجب منفذ <span class="tok">25</span> الصادر عند Hetzner <strong>مو</strong> من هالجدار، هو على مستوى شبكة Hetzner (upstream). ما بينحل من هون ولا من ufw — بس بطلب فك حجب (خطوة الاختبار الحاسمة تحت).</p>
+    </div>
+
+    <div class="box danger">
+      <div class="bt">مهم: اختار جدار واحد — مش الاثنين</div>
+      <p>ما بتحتاج الطبقتين مع بعض. أي واحد منهن بيكفي لوحده. وجود الاثنين بقواعد مختلفة = <strong>مصدر البلبلة</strong> اللي صارت معك (فتحت 993 بـufw بس ضل محجوب لأنه Hetzner كان حاجبه).</p>
+      <p><strong>توصيتي:</strong> اعتمد على <strong>Hetzner Cloud Firewall</strong> بس (بيشتغل على مستوى الشبكة قبل ما توصل الحزمة للسيرفر — أقوى وأوضح)، واطفي ufw.</p>
+    </div>
+
+    <h3>لو اخترت Hetzner Cloud Firewall → اطفي ufw</h3>
+    <div class="box warn">
+      <div class="bt">الترتيب مهم — حتى ما تنقفل برّا</div>
+      <p>أول ظبّط Hetzner Cloud Firewall كامل و<strong>تأكد إنه منفذ 22 (SSH) مفتوح فيه</strong>، وبعدها بس اطفي ufw. لو عكست الترتيب وHetzner ما فيه 22، بتنقفل برّا السيرفر.</p>
+    </div>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">تعطيل ufw (بعد ما Hetzner جاهز)</span><button class="cp">نسخ</button></div>
+<pre><code>ufw disable
+ufw status          <span class="c-dim"># لازم: Status: inactive</span>
+<span class="c-dim"># تنظيف كامل اختياري: ufw reset ثم ufw disable</span></code></pre>
+    </div>
+
+    <h3>الطبقة ٢ — ufw (بديل: لو فضّلت السيرفر بدل Hetzner)</h3>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">ufw — نفس المنافذ</span><button class="cp">نسخ</button></div>
+<pre><code>ufw allow 22/tcp
+ufw allow 25/tcp
+ufw allow 80/tcp
+ufw allow 143/tcp
+ufw allow 443/tcp
+ufw allow 465/tcp
+ufw allow 587/tcp
+ufw allow 993/tcp
+ufw allow 995/tcp
+ufw allow 4190/tcp
+ufw allow 8080/tcp
+ufw enable
+ufw status numbered</code></pre>
+    </div>
+    <div class="box tip">
+      <div class="bt">تبسيط (موصى به)</div>
+      <p>حتى ما تتلخبط بين جدارين: خلّي <strong>واحد بس</strong> هو المصدر. الأنظف تعتمد على <strong>Hetzner Cloud Firewall</strong> (أوضح من اللوحة) وتترك ufw مفتوح/مطفي، أو العكس. وجود الاثنين بقواعد مختلفة = مصدر رئيسي للأخطاء.</p>
+    </div>
+
+    <h3>الاتجاه الصادر (Outbound) — اقرأ قبل ما تعمل قواعد</h3>
+    <div class="box tip">
+      <div class="bt">الأبسط والأأمن: لا تعمل قواعد Outbound أبداً</div>
+      <p>الافتراضي (<span class="tok">ufw</span> = allow outgoing، وHetzner Outbound = فاضي) معناه <strong>كل الصادر مسموح</strong>. سيرفرك أصلاً بيطلع على كل المنافذ اللي يحتاجها. <strong>خليه هيك.</strong> إضافة قواعد Outbound يدوياً بتقلبها لـ«اسمح بس بالمذكور» — وأي منفذ نسيته بينحجب ويكسر السيرفر.</p>
+    </div>
+    <div class="box danger">
+      <div class="bt">لو أصرّيت على تحكّم صريح — حصر 80/443/25 بس خطير وناقص</div>
+      <p>حصر الصادر على <span class="tok">80/443/25</span> فقط <strong>بيكسر السيرفر</strong> — ناقص منافذ حيوية، أهمها <span class="tok">53 (DNS)</span>: بدونه السيرفر ما بيلاقي عنوان Gmail أصلاً، فكل البريد بيتوقف. القائمة الصادرة الصحيحة الكاملة:</p>
+      <ul>
+        <li><span class="tok">53 UDP + TCP</span> — DNS (حيوي — بدونه ما في بريد ولا شهادة)</li>
+        <li><span class="tok">25 TCP</span> — تسليم البريد للسيرفرات الخارجية</li>
+        <li><span class="tok">465 + 587 TCP</span> — تسليم لبعض السيرفرات + relay إذا استعملت</li>
+        <li><span class="tok">80 + 443 TCP</span> — ACME/شهادات + تحديثات النظام + MTA-STS</li>
+        <li><span class="tok">123 UDP</span> — NTP (ضبط الوقت — مهم للشهادات والتوقيع)</li>
+      </ul>
+    </div>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">ufw — قواعد صادرة صريحة (فقط لو أصرّيت)</span><button class="cp">نسخ</button></div>
+<pre><code><span class="c-dim"># الافتراضي أسهل؛ نفّذ هذا فقط لو بدك تحكّم صارم</span>
+ufw default deny outgoing
+ufw allow out 53         <span class="c-dim"># DNS (UDP+TCP)</span>
+ufw allow out 123/udp    <span class="c-dim"># NTP</span>
+ufw allow out 25/tcp
+ufw allow out 465/tcp
+ufw allow out 587/tcp
+ufw allow out 80/tcp
+ufw allow out 443/tcp
+ufw reload</code></pre>
+    </div>
+    <div class="box warn">
+      <div class="bt">وعلى Hetzner Cloud Firewall</div>
+      <p>لو ضفت قواعد Outbound بلوحة Hetzner، لازم نفس القائمة فوق (خصوصاً <span class="tok">53</span> و<span class="tok">25</span>). <strong>توصيتي: خلّي Outbound فاضي (Nothing) بـHetzner</strong>، وإذا لازم تحكّم صارم اعمله من ufw بس — حتى ما تكرّر القواعد بمكانين.</p>
+    </div>
+    <div class="box danger">
+      <div class="bt">تذكير: حجب 25 الصادر مش من هون</div>
+      <p>حتى لو سمحت بـ25 الصادر بجدارَيك، Hetzner بيحجبه upstream على الشبكة. سماحك بالجدار ضروري بس <strong>مو كافي</strong> — لازم كمان طلب فك الحجب من <span class="tok">console.hetzner.com/limits</span>.</p>
+    </div>
+
+    <div class="check">
+      <div class="ct">نقطة فحص ٣ — اختبر كل منفذ فعلياً (مو تفترض)</div>
+      <p style="font-weight:400;font-size:.95rem;margin-bottom:10px">اختبر المنافذ <strong>من برّا السيرفر</strong> (زي ما العالم بيشوفك). الأمر حسب جهازك:</p>
+      <div class="term" style="margin:0 0 12px">
+        <div class="term-bar"><span class="ttl">من macOS (مجرَّب وشغّال)</span><button class="cp">نسخ</button></div>
+<pre><code>for p in 25 143 443 465 587 993 995 4190; do
+  nc -z -G 5 mail.techkahwa.net $p &gt;/dev/null 2&gt;&amp;1 \
+    &amp;&amp; echo "$p OPEN" || echo "$p CLOSED"
+done</code></pre>
+      </div>
+      <div class="term" style="margin:0 0 12px">
+        <div class="term-bar"><span class="ttl">من جهاز/سيرفر لينكس</span><button class="cp">نسخ</button></div>
+<pre><code>for p in 25 143 443 465 587 993 995 4190; do
+  timeout 5 bash -c "echo &gt; /dev/tcp/mail.techkahwa.net/$p" 2&gt;/dev/null \
+    &amp;&amp; echo "$p OPEN" || echo "$p CLOSED"
+done</code></pre>
+      </div>
+      <div class="box warn" style="margin:0 0 12px">
+        <div class="bt">فرق الأوامر — درس مهم</div>
+        <p>أمر <span class="tok">timeout</span> مو موجود على macOS، فأمر لينكس بيفشل عالماك بصمت وبيطلّع كل شي CLOSED غلط. عالماك استعمل <span class="tok">nc -z -G 5</span> (الـ<span class="tok">-G</span> = مهلة الاتصال). أو استعمل موقع <span class="tok">check-host.net/check-tcp</span> من أي جهاز.</p>
+      </div>
+
+      <p style="font-weight:400;font-size:.95rem;margin-bottom:8px"><strong>النتيجة المتوقعة لكل منفذ</strong> — هيك بتعرف شو طبيعي وشو مشكلة:</p>
+      <table class="cmp" style="margin-bottom:14px">
+        <thead><tr><th>منفذ</th><th>المتوقع من برّا</th><th>التفسير</th></tr></thead>
+        <tbody>
+          <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">443 · 465 · 993 · 4190</td><td><strong>OPEN</strong></td><td>الأساسيات: لوحة/webmail، إرسال عملائك، استقبالهم، فلاتر Sieve.</td></tr>
+          <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">995</td><td><strong>OPEN</strong> إذا بدك POP3</td><td><strong>ضروري لربط Gmail</strong> (بيسحب البريد عبر POP3 على 995). لو CLOSED والسيرفر ماسكه → القاعدة ناقصة بجدار Hetzner.</td></tr>
+          <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">25</td><td>لا يُفحص من شبكة منزلية</td><td>مزوّدو الإنترنت المنزلي بيحجبوا 25 من شبكتهم — فحصه من البيت بيطلّع CLOSED دايماً حتى لو سليم. <strong>الدليل الحقيقي: استقبالك للبريد.</strong> أو افحصه من check-host.net.</td></tr>
+          <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">143 · 587</td><td>CLOSED مقبول</td><td>نسخ STARTTLS — Stalwart ما بيفعّلهن افتراضياً، و465/993 بيغنوا عنهن تماماً. تفعيلهن اختياري من Settings → Listeners.</td></tr>
+        </tbody>
+      </table>
+      <ul>
+        <li><span class="tok">443</span> و<span class="tok">465</span> و<span class="tok">993</span> و<span class="tok">4190</span> كلهن <span class="tok">OPEN</span> من برّا.</li>
+        <li><span class="tok">995</span> = <span class="tok">OPEN</span> إذا ناوي تربط Gmail عبر POP3.</li>
+        <li>القواعد متطابقة بين Hetzner Cloud Firewall و<span class="tok">ufw</span>، والـOutbound على Hetzner فاضي (Nothing).</li>
+      </ul>
+      <div class="fail"><b>إذا منفذ CLOSED من برّا بس OPEN من السيرفر نفسه:</b> الحاجب جدار Hetzner Cloud — أضف قاعدته للـInbound. <b>إذا CLOSED من الاتنين:</b> Stalwart مو ماسكه — Settings → Listeners (طبيعي لـ143/587). <b>ومنفذ 25 لا يُحكم عليه من شبكة منزلية.</b></div>
+    </div>
+  </section>
+
+  <!-- P4 INSTALL -->
+  <section class="phase" id="p4">
+    <div class="ph-head"><div class="ph-n">٤</div><h2>تنصيب Stalwart + حساب طوارئ</h2></div>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">install</span><button class="cp">نسخ</button></div>
+<pre><code>curl --proto '=https' --tlsv1.2 -sSf https://get.stalw.art/install.sh -o install.sh
+sh install.sh</code></pre>
+    </div>
+    <h3>ثبّت حساب طوارئ (حتى ما تنحبس برّا أبداً)</h3>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">recovery admin</span><button class="cp">نسخ</button></div>
+<pre><code>nano /etc/stalwart/stalwart.env
+<span class="c-dim"># أضف هذا السطر (بدّل كلمة السر بوحدة قوية):</span>
+STALWART_RECOVERY_ADMIN=admin:MyStr0ngRecovery!Pass
+<span class="c-dim"># احفظ (Ctrl+O ثم Enter ثم Ctrl+X) ثم:</span>
+systemctl restart stalwart
+systemctl status stalwart</code></pre>
+    </div>
+    <div class="check">
+      <div class="ct">نقطة فحص ٤</div>
+      <ul>
+        <li><span class="tok">systemctl status stalwart</span> = <span class="tok">active (running)</span>.</li>
+        <li>ثبّت <span class="tok">STALWART_RECOVERY_ADMIN</span> بكلمة سر تعرفها.</li>
+      </ul>
+      <div class="fail"><b>إذا مو running:</b> شغّل <span class="tok">journalctl -u stalwart -n 50</span> واقرأ الخطأ قبل ما تكمّل.</div>
+    </div>
+  </section>
+
+  <!-- P5 TOKEN -->
+  <section class="phase" id="p5">
+    <div class="ph-head"><div class="ph-n">٥</div><h2>توكن Cloudflare — والتحقق منه قبل أي شي</h2></div>
+    <p class="ph-sub">هون السبب اللي كسر إعدادك السابق. رح نتحقق من التوكن باستقلال <strong>قبل</strong> ما نعطيه لـStalwart، حتى نتفادى حظر Let's Encrypt نهائياً.</p>
+
+    <h3>أنشئ التوكن</h3>
+    <div class="box loc">
+      <div class="bt">بـCloudflare</div>
+      <ul>
+        <li>أيقونتك فوق → <strong>My Profile → API Tokens → Create Token</strong></li>
+        <li>استعمل قالب <strong>Edit zone DNS</strong></li>
+        <li><strong>Permissions:</strong> <span class="tok">Zone · DNS · Edit</span> — وأضف صف تاني <span class="tok">Zone · Zone · Read</span></li>
+        <li><strong>Zone Resources:</strong> اختار <strong>All zones</strong> (حتى يغطّي كل دوميناتك الـ٢٠)</li>
+        <li>Continue → Create Token → <strong>انسخه فوراً</strong> (بينعرض مرة وحدة)</li>
+      </ul>
+    </div>
+
+    <h3>تحقق من التوكن (خطوة الوقاية الذهبية)</h3>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">verify token</span><button class="cp">نسخ</button></div>
+<pre><code>curl -s "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+  -H "Authorization: Bearer YOUR_CLOUDFLARE_TOKEN" \
+  -H "Content-Type: application/json"
+<span class="c-dim"># لازم ترى: "status":"active"  و  "success":true</span></code></pre>
+    </div>
+    <div class="check">
+      <div class="ct">نقطة فحص ٥ — لا تتجاوزها إطلاقاً</div>
+      <ul>
+        <li>ناتج الأمر فيه <span class="tok">"status":"active"</span> و<span class="tok">"success":true</span>.</li>
+      </ul>
+      <div class="fail"><b>إذا ما طلع active:</b> التوكن غلط أو صلاحياته ناقصة — أعد إنشاءه. <b>ممنوع</b> تكمّل بتوكن غير متحقّق منه، لأنه هو اللي بيسبب حظر Let's Encrypt ٢٤ ساعة.</div>
+    </div>
+  </section>
+
+  <!-- P6 WIZARD -->
+  <section class="phase" id="p6">
+    <div class="ph-head"><div class="ph-n">٦</div><h2>معالج الإعداد (٥ خطوات)</h2></div>
+    <div class="box loc">
+      <div class="bt">افتح المعالج</div>
+      <p>من المتصفح: <span class="tok">http://mail.techkahwa.net:8080/admin</span> — ادخل بحساب <span class="tok">admin</span> وكلمة السر (من <span class="tok">journalctl -u stalwart -n 200 | grep -A8 'bootstrap mode'</span>، أو كلمة سر الطوارئ اللي ثبّتها).</p>
+    </div>
+
+    <h3>الخطوة ١ — Server Identity</h3>
+    <ul class="b">
+      <li><strong>Server Hostname:</strong> <span class="tok">mail.techkahwa.net</span> (اسم السيرفر — خلّيه هيك)</li>
+      <li><strong>Default Email Domain:</strong> <span class="tok">techkahwa.net</span> (أو أي دومين بدك بريدك الأساسي عليه)</li>
+      <li><strong>Automatically Obtain TLS Certificate:</strong> ON ✅</li>
+      <li><strong>Generate Email Signing Keys (DKIM):</strong> ON ✅</li>
+    </ul>
+    <div class="box tip"><div class="bt">تذكير</div><p>حتى لو استخدمت <span class="tok">techkahwa.net</span> للبريد، هاد ما بيأثّر على موقعك — الموقع سجل A، البريد سجل MX، منفصلين تماماً.</p></div>
+
+    <h3>الخطوات ٢–٤ — Storage / Directory / Logging</h3>
+    <ul class="b">
+      <li><strong>Storage:</strong> كله <span class="tok">RocksDB</span> و«Use data store» — لا تغيّر شي.</li>
+      <li><strong>Account Directory:</strong> <span class="tok">Use the internal directory</span>.</li>
+      <li><strong>Logging:</strong> كله افتراضي (<span class="tok">Log file</span>، <span class="tok">Info</span>).</li>
+    </ul>
+
+    <h3>الخطوة ٥ — Automatic DNS Management</h3>
+    <ul class="b">
+      <li><strong>DNS Server Type:</strong> <span class="tok">Cloudflare</span></li>
+      <li><strong>Secret:</strong> الصق التوكن اللي <strong>تحقّقت منه</strong> بخطوة ٥.</li>
+      <li>باقي القيم (Timeout, TTL, Polling...) افتراضية.</li>
+      <li>اضغط <strong>Finish setup</strong>.</li>
+    </ul>
+    <div class="box tip">
+      <div class="bt">ليش Cloudflare هون بيحل مشكلة الشهادة</div>
+      <p>مع Cloudflare، Stalwart بيستخدم تحدي <strong>DNS-01</strong>: بينشر سجل <span class="tok">_acme-challenge</span> مؤقت عبر التوكن — و<strong>ما بيحتاج منافذ 80/443 مفتوحة للإنترنت</strong>. أنظف وأضمن طريقة، خصوصاً وراء Cloudflare.</p>
+    </div>
+
+    <h3>احفظ بيانات الأدمن + أعد التشغيل</h3>
+    <p>بعد Finish رح تظهر بيانات أدمن — <strong>انسخها فوراً</strong> (ما بتنعرض مرة تانية). بعدها:</p>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">restart</span><button class="cp">نسخ</button></div>
+<pre><code>systemctl restart stalwart</code></pre>
+    </div>
+    <div class="check">
+      <div class="ct">نقطة فحص ٦</div>
+      <ul>
+        <li>خلّصت المعالج وحفظت بيانات الأدمن.</li>
+        <li>أعدت تشغيل الخدمة وهي <span class="tok">active (running)</span>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- P7 CERT -->
+  <section class="phase" id="p7">
+    <div class="ph-head"><div class="ph-n">٧</div><h2>فحص الشهادة — الخطوة الأهم بكل الدليل</h2></div>
+    <p class="ph-sub">هون بالضبط وقفت آخر مرة. لا تكمّل لأي إشي قبل ما تتأكد إنه الشهادة حقيقية (Let's Encrypt) <strong>وتطابق اسم السيرفر</strong> — مو ذاتية التوقيع ولا لدومين تاني.</p>
+
+    <div class="box danger">
+      <div class="bt">الدرس الذهبي: بدون شهادة تطابق اسم السيرفر، IMAP/SMTP ما بيشتغلوا</div>
+      <p>لو الشهادة موجودة بس <strong>لاسم غلط</strong>، كل عميل (Thunderbird، Gmail، الموبايل) بيرفض الاتصال ويقول <span class="tok">Wrong Site</span> / <span class="tok">NET::ERR_CERT_COMMON_NAME_INVALID</span>. المنافذ بتكون مفتوحة والسيرفر شغّال — بس التشفير بيفشل لأنه الاسم مش مطابق.</p>
+      <p><strong>سبب المشكلة الشائع (صار فعلياً):</strong> بخانة <span class="tok">Default Email Domain</span> بالمعالج تحط دومين (مثلاً <span class="tok">ehabkahwati.com</span>)، فStalwart بياخد شهادة له ويجعلها <strong>الافتراضية</strong> — بس اسم السيرفر <span class="tok">mail.techkahwa.net</span> ما بياخد شهادة لأنه <strong>مش مسجّل كدومين</strong>، فبيقع على الافتراضي الغلط.</p>
+    </div>
+
+    <div class="box tip">
+      <div class="bt">الوقاية (الأسهل): خلّي اسم السيرفر من نفس دومينك الأساسي</div>
+      <p>لو اخترت اسم السيرفر يكون subdomain من دومينك الأساسي (مثلاً اسم السيرفر <span class="tok">mail.techkahwa.net</span> ودومينك الأساسي <span class="tok">techkahwa.net</span>)، الشهادة التلقائية بتغطّيه ضمناً وما بتواجه المشكلة أصلاً.</p>
+    </div>
+
+    <div class="box warn">
+      <div class="bt">العلاج (لو اخترت دومين مختلف كافتراضي)</div>
+      <p>لو صار عندك المشكلة (اسم السيرفر على دومين، والافتراضي على دومين تاني)، صلّحها هيك:</p>
+      <ul>
+        <li><strong>١)</strong> Directory → Domains → <strong>Create domain</strong> → أضف اسم السيرفر نفسه كدومين (مثلاً <span class="tok">mail.techkahwa.net</span>). هيك Stalwart بيطلبله شهادة ACME. (ما بتحتاج حسابات عليه.)</li>
+        <li><strong>٢)</strong> على هالدومين خلّي <strong>Certificate Management = Automatic</strong> مربوط بمزوّد Let's Encrypt.</li>
+        <li><strong>٣)</strong> Settings → TLS → صحّح <strong>Default Certificate</strong> ليأشّر على شهادة اسم السيرفر (مش الدومين التاني).</li>
+        <li><strong>٤)</strong> <span class="tok">systemctl restart stalwart</span> واستنى دقيقة–دقيقتين.</li>
+      </ul>
+    </div>
+
+    <p>استنى <strong>دقيقتين</strong> بعد إعادة التشغيل (الشهادة بتاخد وقت)، بعدين:</p>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">تحقق من الشهادة (من الماك أو أي جهاز)</span><button class="cp">نسخ</button></div>
+<pre><code>openssl s_client -connect mail.techkahwa.net:443 -servername mail.techkahwa.net \
+  &lt;/dev/null 2&gt;/dev/null | openssl x509 -noout -issuer -subject -dates
+<span class="c-dim"># issuer= لازم يحتوي "Let's Encrypt"</span>
+<span class="c-dim"># subject= لازم يطابق اسم سيرفرك (techkahwa) — مش دومين تاني!</span>
+
+<span class="c-dim"># وتأكد المنافذ فتحت بعد المعالج (شغّله على السيرفر):</span>
+ss -tlnp | grep -E ':443|:993|:465'</code></pre>
+    </div>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">لو فشلت — اقرأ سجل ACME (على السيرفر)</span><button class="cp">نسخ</button></div>
+<pre><code>journalctl -u stalwart --no-pager | grep -iE "acme|certificate|order|challenge|error" | tail -30
+<span class="c-dim"># ملاحظة: journalctl على السيرفر فقط — مش على الماك</span></code></pre>
+    </div>
+    <div class="check">
+      <div class="ct">نقطة فحص ٧ — بوابة حاسمة</div>
+      <ul>
+        <li><span class="tok">issuer=</span> فيه <span class="tok">Let's Encrypt</span> (مو self-signed).</li>
+        <li><span class="tok">subject=</span> <strong>يطابق اسم سيرفرك</strong> <span class="tok">mail.techkahwa.net</span> — مو دومين تاني.</li>
+        <li>المنافذ <span class="tok">443</span> و<span class="tok">993</span> و<span class="tok">465</span> كلها LISTEN.</li>
+        <li><span class="tok">https://mail.techkahwa.net</span> بيفتح بدون تحذير، وThunderbird بيتصل بدون "Add Exception".</li>
+      </ul>
+      <div class="fail"><b>إذا subject= دومين غلط:</b> نفّذ «العلاج» فوق (أضف اسم السيرفر كدومين + صحّح Default Certificate). <b>إذا self-signed:</b> راجع سجل ACME والتوكن. <b>لا تكرّر restart كتير</b> حتى ما تنحظر من Let's Encrypt.</div>
+    </div>
+  </section>
+
+  <!-- P8 DOMAIN DNS -->
+  <section class="phase" id="p8">
+    <div class="ph-head"><div class="ph-n">٨</div><h2>فحص سجلات دومين البريد</h2></div>
+    <div class="box loc">
+      <div class="bt">باللوحة</div>
+      <p><strong>Directory → Domains</strong> — دومينك الأساسي موجود. اضغط عليه لتشوف السجلات اللي Stalwart نشرها (SPF/DKIM/DMARC/SRV/TLS-RPT...). مع Cloudflare بينشر أغلبها تلقائياً.</p>
+    </div>
+    <div class="box danger">
+      <div class="bt">سجل MX مفقود — لازم تضيفه يدوي</div>
+      <p>لاحظنا بإعدادك إنه Stalwart نشر كل السجلات <strong>إلا الـ<span class="tok">MX</span></strong>. وبدون MX، ما حدا بيعرف يوصل بريد دومينك لسيرفرك. أضفه يدوي بـCloudflare:</p>
+      <ul>
+        <li>Type: <span class="tok">MX</span></li>
+        <li>Name: <span class="tok">@</span> (أو <span class="tok">techkahwa.net</span>)</li>
+        <li>Mail server: <span class="tok">mail.techkahwa.net</span></li>
+        <li>Priority: <span class="tok">10</span> · Proxy: <strong>DNS only</strong></li>
+      </ul>
+      <p>كرّر إضافة الـMX يدوي لكل دومين تضيفه.</p>
+    </div>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">تحقق من سجلات الدومين</span><button class="cp">نسخ</button></div>
+<pre><code>dig +short MX techkahwa.net                 <span class="c-dim"># → 10 mail.techkahwa.net (لو فاضي، أضفه يدوي)</span>
+dig +short TXT techkahwa.net                <span class="c-dim"># SPF: v=spf1 ...</span>
+dig +short TXT _dmarc.techkahwa.net         <span class="c-dim"># DMARC</span>
+<span class="c-dim"># DKIM: خذ اسم الـselector من اللوحة ثم:</span>
+dig +short TXT SELECTOR._domainkey.techkahwa.net</code></pre>
+    </div>
+    <div class="check">
+      <div class="ct">نقطة فحص ٨</div>
+      <ul>
+        <li>الـ<span class="tok">MX</span> بيأشّر على <span class="tok">mail.techkahwa.net</span>.</li>
+        <li>الـ<span class="tok">SPF</span> و<span class="tok">DMARC</span> و<span class="tok">DKIM</span> كلهن موجودين.</li>
+        <li>كل هالسجلات بـCloudflare <strong>رمادية</strong>.</li>
+      </ul>
+      <div class="fail"><b>الـMX دايماً بتضيفه يدوي</b> (Stalwart ما بينشره). <b>إذا سجل تاني ناقص:</b> تأكد التوكن All zones وإنه الدومين مضاف باللوحة، وأعد الفحص بعد دقيقة (TTL). إذا ضل، أضفه يدوي من القيمة اللي باللوحة.</div>
+    </div>
+  </section>
+
+  <!-- P9 ACCOUNT -->
+  <section class="phase" id="p9">
+    <div class="ph-head"><div class="ph-n">٩</div><h2>إنشاء أول حساب وفتح البريد</h2></div>
+    <div class="box loc">
+      <div class="bt">باللوحة</div>
+      <p><strong>Directory → Accounts → Create user</strong></p>
+      <ul>
+        <li>Email/Login: <span class="tok">ehab@techkahwa.net</span></li>
+        <li>Password: كلمة سر قوية <strong>احفظها</strong></li>
+        <li>Name: Ehab → Save</li>
+      </ul>
+    </div>
+    <div class="box warn">
+      <div class="bt">الفرق اللي لبّسك آخر مرة</div>
+      <p>حساب <span class="tok">admin</span> = لإدارة السيرفر فقط، مو صندوق بريد. اللي بيفتح إيميل فعلي هو <strong>حساب user</strong> اللي أنشأته هلأ. سجّل دخول للبريد بحساب الـuser، مو الأدمن.</p>
+    </div>
+    <div class="check">
+      <div class="ct">نقطة فحص ٩</div>
+      <ul>
+        <li>حساب <span class="tok">ehab@techkahwa.net</span> ظاهر بليستة Accounts.</li>
+        <li>افتح <span class="tok">https://mail.techkahwa.net</span> وسجّل دخول <strong>بحساب الـuser</strong> → طلع صندوق البريد.</li>
+      </ul>
+      <div class="fail"><b>إذا ما فتح الـwebmail:</b> رجّع لخطوة ٧ (الشهادة). فتح الـwebmail بأمان = دليل إنه كل شي تمام.</div>
+    </div>
+  </section>
+
+  <!-- P10 TEST -->
+  <section class="phase" id="p10">
+    <div class="ph-head"><div class="ph-n">١٠</div><h2>اختبار الإرسال والاستقبال (الإثبات الحقيقي)</h2></div>
+    <p class="ph-sub">هون الاختبار الفعلي. ما نفترض إشي — نختبر منفذ 25 الصادر أول (بوابة حاسمة)، بعدين نرسل من أكتر من منفذ.</p>
+
+    <h3>البوابة الحاسمة: منفذ 25 الصادر</h3>
+    <p>منفذ <span class="tok">25</span> الصادر هو <strong>شريان الحياة</strong> — بدونه مستحيل ترسل لأي سيرفر خارجي (Gmail/Outlook)، مهما كان باقي الإعداد صح. اختبره أول:</p>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">اختبار منفذ 25 الصادر</span><button class="cp">نسخ</button></div>
+<pre><code>timeout 5 nc -zv gmail-smtp-in.l.google.com 25; echo "exit: $?"
+<span class="c-dim"># succeeded / exit: 0  → المنفذ مفتوح، كمّل</span>
+<span class="c-dim"># timed out / exit: 124 → محجوب، لازم تطلب فك الحجب (تحت)</span></code></pre>
+    </div>
+    <div class="box danger">
+      <div class="bt">إذا كان محجوباً (متوقّع على Hetzner الجديد) — اطلب فك الحجب</div>
+      <p>Hetzner بيحجب <span class="tok">25 · 465 · 587</span> الصادرة تلقائياً كمكافحة سبام. <strong>مو من ufw ولا Cloud Firewall</strong> — بس بطلب رسمي عبر الرابط المباشر:</p>
+      <ul>
+        <li><span class="tok">console.hetzner.com/limits</span></li>
+        <li><strong>Request change → Unblock Ports</strong></li>
+        <li>اكتب الرسالة التالية:</li>
+      </ul>
+      <p style="background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:.88rem;direction:ltr;text-align:left">I'm running a legitimate self-hosted mail server (Stalwart) on IP 91.98.194.24 for my own domains. Please unblock outbound SMTP ports 25, 465, and 587. The server has correct reverse DNS (mail.techkahwa.net), SPF, DKIM, and DMARC. Thank you.</p>
+      <p>بعض الحسابات بينفك <strong>تلقائياً خلال دقائق</strong>؛ غيرها بيراجعوه يدوي (لحد يوم). بعدها الرسائل العالقة بالطابور بتنطلق لحالها.</p>
+    </div>
+    <div class="check">
+      <div class="ct">نقطة فحص ١٠-أ — بوابة حاسمة</div>
+      <ul>
+        <li><span class="tok">nc</span> لمنفذ 25 رجّع <span class="tok">succeeded / exit: 0</span>.</li>
+      </ul>
+      <div class="fail"><b>إذا timed out:</b> منفذ 25 محجوب — قدّم طلب فك الحجب و<strong>انتظر</strong> قبل ما تكمّل اختبار الإرسال لبرّا. (الاستقبال والبريد الداخلي بيشتغلوا بالوقت الحالي.)</div>
+    </div>
+
+    <h3>اختبار الإرسال — من المنفذين (465 و587)</h3>
+    <p>نتأكد إنه الإرسال شغّال من كلا منفذي الإرسال، مو واحد بس:</p>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">إرسال عبر 465 (SSL مباشر)</span><button class="cp">نسخ</button></div>
+<pre><code>apt -y install swaks
+swaks --to YOUR_ADDRESS@gmail.com --from ehab@techkahwa.net \
+      --server mail.techkahwa.net:465 --tls-on-connect \
+      --auth LOGIN --auth-user ehab@techkahwa.net</code></pre>
+    </div>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">إرسال عبر 587 (STARTTLS)</span><button class="cp">نسخ</button></div>
+<pre><code>swaks --to YOUR_ADDRESS@gmail.com --from ehab@techkahwa.net \
+      --server mail.techkahwa.net:587 --tls \
+      --auth LOGIN --auth-user ehab@techkahwa.net</code></pre>
+    </div>
+    <div class="box warn">
+      <div class="bt">ملاحظات من التجربة الفعلية</div>
+      <ul>
+        <li>Stalwart أحياناً بيفتح <span class="tok">465/993</span> (implicit TLS) بس، وبيترك <span class="tok">587/143</span> (STARTTLS) مطفي. لو <span class="tok">587</span> أعطى <span class="tok">Connection refused</span>، استعمل <span class="tok">465</span> — بيعمل نفس الشي. لتفعيل 587: Settings → Listeners.</li>
+        <li>ناتج <span class="tok">250 Message queued</span> معناه السيرفر <strong>قبل</strong> الرسالة — بس التسليم الفعلي لبرّا بيعتمد على منفذ 25 (فوق). راقب الوصول الفعلي لـGmail.</li>
+        <li><strong>لا تحط كلمة السر بسطر الأمر</strong> — swaks بيسألك ياها بأمان. (وإذا انكشفت، غيّرها فوراً.)</li>
+      </ul>
+    </div>
+
+    <h3>تحقق نهائي من التسليم والسمعة</h3>
+    <ul class="b">
+      <li>افتح الرسالة بـGmail → <strong>Show original</strong> → لازم: <span class="tok">SPF=PASS</span> · <span class="tok">DKIM=PASS</span> · <span class="tok">DMARC=PASS</span>.</li>
+      <li>ردّ من Gmail على العنوان → لازم توصل لصندوقك (استقبال).</li>
+      <li>أرسل لـ<strong>mail-tester.com</strong> — الهدف <strong>10/10</strong>. وافحص <strong>MXToolbox Blacklist</strong> لـIP السيرفر.</li>
+    </ul>
+    <div class="check">
+      <div class="ct">نقطة فحص ١٠-ب</div>
+      <ul>
+        <li>وصلت لـGmail <strong>بالإنبوكس مو السبام</strong>، والتلاتة PASS.</li>
+        <li>الإرسال نجح من <span class="tok">465</span> (و<span class="tok">587</span> إذا مفعّل).</li>
+        <li>الرد من Gmail وصل لصندوقك، وmail-tester = 10/10، والـIP مو على blacklist.</li>
+      </ul>
+      <div class="fail"><b>إذا السيرفر قبل (queued) بس ما وصلت Gmail:</b> غالباً منفذ 25 الصادر — راجع البوابة الحاسمة فوق. <b>إذا راحت سبام:</b> تأكد PTR + SPF/DKIM/DMARC وابدأ warmup (خطوة ١٢).</div>
+    </div>
+  </section>
+
+  <!-- DIAG -->
+  <section class="phase" id="diag">
+    <div class="ph-head"><div class="ph-n">⚕</div><h2>تشخيص: «بستقبل بس ما برسل» — عزل الخطأ طبقة طبقة</h2></div>
+    <p class="ph-sub">منهجية هندسية: من الداخل للخارج. كل خطوة بتستبعد طبقة <strong>بدليل</strong>، مو بتخمين. نفّذها بالترتيب — لا تقفز.</p>
+
+    <table class="cmp">
+      <thead><tr><th>الطبقة</th><th>السؤال</th><th>الأداة</th></tr></thead>
+      <tbody>
+        <tr><td class="k">١ — القبول</td><td>هل السيرفر قبل الرسالة أصلاً؟</td><td>swaks</td></tr>
+        <tr><td class="k">٢ — السجل</td><td>شو صار بالرسالة بعد القبول؟</td><td>journalctl / لوحة Queue</td></tr>
+        <tr><td class="k">٣ — الصادر</td><td>هل المشكلة بكل الصادر ولا بمنفذ 25 بس؟</td><td>اختبار تحكّم (443 مقابل 25)</td></tr>
+        <tr><td class="k">٤ — جدرانك</td><td>هل ufw أو Hetzner Firewall هو الحاجب؟</td><td>ufw verbose + Console</td></tr>
+        <tr><td class="k">٥ — المزوّد</td><td>الاستنتاج: الحجب upstream عند Hetzner</td><td>طلب فك حجب</td></tr>
+      </tbody>
+    </table>
+
+    <h3>الطبقة ١ — هل السيرفر قبل الرسالة؟ (على السيرفر)</h3>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">إرسال اختباري عبر 465</span><button class="cp">نسخ</button></div>
+<pre><code>swaks --to YOUR_ADDRESS@gmail.com --from ehab@techkahwa.net \
+      --server mail.techkahwa.net:465 --tls-on-connect \
+      --auth LOGIN --auth-user ehab@techkahwa.net</code></pre>
+    </div>
+    <table class="cmp">
+      <thead><tr><th>النتيجة</th><th>معناها</th><th>الخطوة الجاية</th></tr></thead>
+      <tbody>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">250 Message queued</td><td>القبول والمصادقة تمام. المشكلة <strong>بالتسليم لبرّا</strong>.</td><td>→ الطبقة ٢</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">Connection refused</td><td>Stalwart مو ماسك هالمنفذ.</td><td>افحص <span class="tok">ss -tlnp | grep stalwart</span> — لو المنفذ ناقص: Settings → Listeners باللوحة، فعّله.</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">535 auth failed</td><td>كلمة سر/يوزر غلط.</td><td>صفّر كلمة سر الحساب من اللوحة (Credentials).</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">timed out</td><td>جدار بيحجب المنفذ الوارد.</td><td>→ الطبقة ٤ (بس للوارد)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>الطبقة ٢ — شو صار بالرسالة بعد القبول؟ (على السيرفر)</h3>
+    <p>الرسالة المقبولة بتروح للطابور، وStalwart بيحاول يسلّمها للمستقبل على منفذه 25. السجل بيقلك بالضبط وين فشل:</p>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">سجل محاولات التسليم</span><button class="cp">نسخ</button></div>
+<pre><code>journalctl -u stalwart --no-pager -n 500 | grep -iE "deliver|connect|dns|mx|hosts" | tail -25
+<span class="c-dim"># وبالتوازي من اللوحة: Queues → Messages → شوف حالة الرسالة العالقة</span></code></pre>
+    </div>
+    <table class="cmp">
+      <thead><tr><th>شو بتشوف بالسجل</th><th>معناها</th><th>الخطوة الجاية</th></tr></thead>
+      <tbody>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">connection timed out ...:25</td><td>ما قدر يفتح اتصال صادر على 25. <strong>هاي حالتك.</strong></td><td>→ الطبقة ٣</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">DNS / MX lookup failed</td><td>مشكلة resolver مو منافذ.</td><td>افحص <span class="tok">dig MX gmail.com</span> من السيرفر.</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">550 / 554 rejected</td><td>وصلت للمستقبل بس <strong>رفضها</strong> — سمعة/سجلات، مو منافذ.</td><td>افحص PTR/SPF/DKIM (خطوة ٨) وblacklist.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>الطبقة ٣ — اختبار التحكّم: كل الصادر ولا منفذ 25 بس؟ (على السيرفر)</h3>
+    <p>هون الذكاء بالتشخيص: منقارن منفذين. لو <span class="tok">443</span> الصادر شغّال و<span class="tok">25</span> الصادر محجوب — الحجب <strong>مستهدف لمنفذ 25 تحديداً</strong>، وهاي بصمة حجب مزوّد:</p>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">اختبار التحكّم — شغّله على السيرفر</span><button class="cp">نسخ</button></div>
+<pre><code>timeout 5 bash -c "echo &gt; /dev/tcp/google.com/443" 2&gt;/dev/null \
+  &amp;&amp; echo "443 OUT: OPEN" || echo "443 OUT: BLOCKED"
+
+timeout 5 bash -c "echo &gt; /dev/tcp/gmail-smtp-in.l.google.com/25" 2&gt;/dev/null \
+  &amp;&amp; echo "25 OUT: OPEN" || echo "25 OUT: BLOCKED"
+
+<span class="c-dim"># هدف تاني للتأكيد (مو بس Google):</span>
+timeout 5 bash -c "echo &gt; /dev/tcp/mta5.am0.yahoodns.net/25" 2&gt;/dev/null \
+  &amp;&amp; echo "25→Yahoo: OPEN" || echo "25→Yahoo: BLOCKED"</code></pre>
+    </div>
+    <table class="cmp">
+      <thead><tr><th>النتيجة</th><th>معناها</th><th>الخطوة الجاية</th></tr></thead>
+      <tbody>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">443 OPEN · 25 OPEN</td><td>المنافذ سليمة — المشكلة مو هون.</td><td>ارجع للطبقة ٢ (DNS أو رفض المستقبل).</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">443 OPEN · 25 BLOCKED (للهدفين)</td><td>حجب مستهدف لمنفذ 25. <strong>هاي حالتك.</strong></td><td>→ الطبقة ٤ (استبعد جدرانك أول)</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">443 BLOCKED كمان</td><td>مشكلة شبكة عامة (نادر جداً).</td><td>افحص الشبكة/الـrouting مع Hetzner.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>الطبقة ٤ — استبعد جدرانك (قبل ما تتهم المزوّد)</h3>
+    <p><strong>٤-أ: ufw الصادر</strong> — الافتراضي بيسمح بكل الصادر، بس تأكد:</p>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">سياسة ufw الصادرة</span><button class="cp">نسخ</button></div>
+<pre><code>ufw status verbose | grep -i default
+<span class="c-dim"># لازم: default: deny (incoming), allow (outgoing)</span>
+<span class="c-dim"># لو outgoing = deny → هاد الحاجب! صلّحه:</span>
+<span class="c-dim">#   ufw default allow outgoing &amp;&amp; ufw reload</span></code></pre>
+    </div>
+    <p><strong>٤-ب: Hetzner Cloud Firewall</strong> — من الـConsole → Firewalls → تبويب <strong>Outbound</strong>:</p>
+    <ul class="b">
+      <li><strong>فاضي (Nothing)</strong> = كل الصادر مسموح ✅ — مو هو الحاجب.</li>
+      <li><strong>فيه قواعد</strong> = بس المذكور مسموح ⚠️ — إذا 25 مو مذكور، هاد الحاجب. أضف قاعدة TCP 25 صادرة أو احذف كل قواعد الـOutbound.</li>
+    </ul>
+    <table class="cmp">
+      <thead><tr><th>الحالة</th><th>الاستنتاج</th></tr></thead>
+      <tbody>
+        <tr><td class="k">ufw outgoing = allow · الـOutbound فاضي · و25 لسا BLOCKED</td><td><strong>جدرانك بريئة — الحجب upstream.</strong> → الطبقة ٥</td></tr>
+        <tr><td class="k">لقيت قاعدة حاجبة بأي جدار</td><td>صلّحها وأعد اختبار الطبقة ٣.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>الطبقة ٥ — الاستنتاج النهائي: الحجب من Hetzner (upstream)</h3>
+    <div class="box danger">
+      <div class="bt">الدليل القاطع مكتمل</div>
+      <p>الصادر عموماً شغّال (443 OPEN) + جدرانك سامحة + منفذ 25 timeout لأكتر من هدف = <strong>Hetzner حاجب منفذ 25 على مستوى الشبكة</strong>. هاد سلوكهم الافتراضي للحسابات الجديدة (مكافحة سبام)، وما بينحل بأي إعداد عندك.</p>
+    </div>
+    <ul class="b">
+      <li><strong>الطلب:</strong> <span class="tok">console.hetzner.com/limits</span> → <strong>Request change → Unblock Ports</strong> → اشرح إنه سيرفر بريد شرعي بـPTR/SPF/DKIM/DMARC مضبوطين. (بينفك تلقائياً خلال دقائق لبعض الحسابات.)</li>
+      <li><strong>ملاحظة:</strong> الحسابات الجديدة ما بيفكّولها قبل أول فاتورة مدفوعة.</li>
+      <li><strong>التحقق بعد الفك:</strong> أعد أمر الطبقة ٣ → لازم <span class="tok">25 OUT: OPEN</span>. الرسائل العالقة بالطابور بتنطلق لحالها (أو أعد جدولتها من لوحة Queues).</li>
+    </ul>
+    <div class="check">
+      <div class="ct">نقطة الفحص النهائية للتشخيص</div>
+      <ul>
+        <li>حدّدت الطبقة اللي فشلت <strong>بدليل من أمر</strong>، مو بتخمين.</li>
+        <li>إذا وصلت للطبقة ٥: قدّمت الطلب، وبعد الفك <span class="tok">25 OUT: OPEN</span> والرسالة وصلت Gmail فعلياً.</li>
+      </ul>
+      <div class="fail"><b>قاعدة:</b> لا تعيد تشغيل الخدمة أو تغيّر إعدادات عشوائياً وأنت عم تشخّص — كل تغيير غير موثّق بيخرّب الدليل وبيرجّعك لنقطة الصفر.</div>
+    </div>
+  </section>
+
+  <!-- P11 CLIENTS -->
+  <section class="phase" id="p11">
+    <div class="ph-head"><div class="ph-n">١١</div><h2>الربط مع Gmail والأجهزة</h2></div>
+    <p class="ph-sub">هلأ بعد ما الشهادة صحيحة، الأجهزة رح تتصل بدون أي تحذير أو استثناء.</p>
+    <h3>إعدادات أي برنامج بريد (Thunderbird / آيفون / أندرويد)</h3>
+    <ul class="b">
+      <li>الاستقبال: <span class="tok">mail.techkahwa.net</span> · Port <span class="tok">993</span> · SSL/TLS</li>
+      <li>الإرسال: <span class="tok">mail.techkahwa.net</span> · Port <span class="tok">587</span> · STARTTLS (أو <span class="tok">465</span> · SSL)</li>
+      <li>Username: العنوان الكامل <span class="tok">ehab@techkahwa.net</span> · Password: كلمة سر الحساب</li>
+    </ul>
+    <h3>ربطه داخل Gmail (تفتحه من Gmail نفسه)</h3>
+    <div class="box loc">
+      <div class="bt">Gmail على الكمبيوتر</div>
+      <ul>
+        <li>الاستقبال: ⚙️ → See all settings → <strong>Accounts and Import</strong> → Add a mail account → POP3: server <span class="tok">mail.techkahwa.net</span> port <span class="tok">995</span> SSL.</li>
+        <li>الإرسال: نفس التبويب → Send mail as → SMTP <span class="tok">mail.techkahwa.net</span> port <span class="tok">465</span> SSL.</li>
+        <li>Gmail بيبعت كود تأكيد على <span class="tok">ehab@techkahwa.net</span> — خذه من الـwebmail.</li>
+      </ul>
+    </div>
+    <div class="check">
+      <div class="ct">نقطة فحص ١١</div>
+      <ul>
+        <li>البرنامج/Gmail اتصل <strong>بدون تحذير شهادة</strong> وزامن الرسائل.</li>
+        <li>أرسلت رسالة تجربة من الجهاز ووصلت.</li>
+      </ul>
+      <div class="fail"><b>إذا طلع تحذير شهادة (زي Thunderbird قبل):</b> معناه الشهادة لسا self-signed — ارجع لخطوة ٧، لا تضغط «Add Exception».</div>
+    </div>
+  </section>
+
+  <!-- P12 -->
+  <section class="phase" id="p12">
+    <div class="ph-head"><div class="ph-n">١٢</div><h2>باقي الدومينات + warmup + نسخ احتياطي</h2></div>
+    <h3>أضف باقي الـ١٩ دومين</h3>
+    <p>لكل دومين: <strong>Directory → Domains → Create domain</strong> → اكتب الدومين → Stalwart بينشر سجلاته بـCloudflare تلقائياً. بعدين أنشئ حساباته من <strong>Accounts</strong>. تأكد كل سجلاته رمادية.</p>
+    <h3>warmup (مهم لسمعتك)</h3>
+    <ul class="b">
+      <li>لا تبعت كميات كبيرة فجأة — زيد الحجم تدريجياً على أسبوعين.</li>
+      <li>سجّل دوميناتك بـ<strong>Google Postmaster Tools</strong> وراقب السمعة.</li>
+    </ul>
+    <h3>نسخ احتياطي</h3>
+    <ul class="b">
+      <li>فعّل <strong>Hetzner Backups</strong>.</li>
+      <li>خذ نسخة دورية من <span class="tok">/var/lib/stalwart</span> و<span class="tok">/etc/stalwart</span>.</li>
+    </ul>
+    <div class="check">
+      <div class="ct">نقطة فحص ١٢ — خلصنا</div>
+      <ul>
+        <li>كل دوميناتك مضافة وسجلاتها منشورة وصحيحة.</li>
+        <li>Backups مفعّلة.</li>
+        <li>عم تبعت بالتدريج وتراقب السمعة.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    دليل مبني على بحث حالي (يوليو ٢٠٢٦) وتوثيق Stalwart الرسمي، ومصمّم لتفادي الأخطاء اللي صادفتها. راجع <a href="https://stalw.art/docs" target="_blank" rel="noopener">stalw.art/docs</a> عند الحاجة. القاعدة: نقطة فحص فاشلة = نوقف ونصلّح قبل الاستمرار.
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.term .cp').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const code=btn.closest('.term').querySelector('code');
+      navigator.clipboard.writeText(code.innerText).then(()=>{
+        const o=btn.textContent;btn.textContent='تم ✓';setTimeout(()=>btn.textContent=o,1300);
+      }).catch(()=>{btn.textContent='انسخ يدوياً';});
+    });
+  });
+</script>
+
+</body>
+</html>
