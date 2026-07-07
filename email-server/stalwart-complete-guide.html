@@ -133,12 +133,16 @@
         <li><a href="#p5">توكن Cloudflare + التحقق منه</a></li>
         <li><a href="#p6">معالج الإعداد (٥ خطوات)</a></li>
         <li><a href="#p7">فحص الشهادة (الأهم)</a></li>
+        <li><a href="#p7b">تفعيل 587 + فحص المنافذ</a></li>
         <li><a href="#p8">فحص سجلات الدومين</a></li>
         <li><a href="#p9">إنشاء أول حساب وفتح البريد</a></li>
         <li><a href="#p10">اختبار الإرسال والاستقبال</a></li>
         <li><a href="#diag">تشخيص: بستقبل بس ما برسل</a></li>
         <li><a href="#p11">الربط مع Gmail والأجهزة</a></li>
         <li><a href="#p12">باقي الدومينات + warmup</a></li>
+        <li><a href="#p13">التسلسل المنطقي الكامل</a></li>
+        <li><a href="#p14">إضافة دومين جديد</a></li>
+        <li><a href="#p15">إعداد البريد على iPhone و Gmail</a></li>
       </ol>
     </nav>
   </div>
@@ -363,27 +367,9 @@ timedatectl set-timezone UTC</code></pre>
       </ul>
     </div>
 
-    <h3>تفعيل منفذ 587 (اختياري — لعملاء STARTTLS)</h3>
-    <p>Stalwart بيجي مفعّل عليه 465/993 (implicit TLS) بس افتراضياً، ومو مشغّل 587/143 (STARTTLS). لو عندك عملاء أو برامج بتتوقع 587 تحديداً (شائع بالشركات)، فعّله هيك:</p>
-    <div class="box loc">
-      <div class="bt">باللوحة: Settings → Network → Listeners → Create</div>
-      <ul>
-        <li><strong>ID:</strong> <span class="tok">submission</span></li>
-        <li><strong>Protocol:</strong> <span class="tok">smtp</span></li>
-        <li><strong>Bind:</strong> <span class="tok">[::]:587</span></li>
-        <li><strong>Implicit TLS:</strong> <strong>OFF</strong> (587 بيستعمل STARTTLS، مو تشفير مباشر)</li>
-        <li>احفظ</li>
-      </ul>
-    </div>
-    <div class="term">
-      <div class="term-bar"><span class="ttl">أعد التحميل وتأكد</span><button class="cp">نسخ</button></div>
-<pre><code>systemctl restart stalwart
-ss -tlnp | grep ':587'     <span class="c-dim"># لازم يظهر LISTEN</span></code></pre>
-    </div>
-    <p>بعدها افتحه بالجدارين: <span class="tok">ufw allow 587/tcp</span> + قاعدة Inbound TCP 587 بـHetzner Cloud Firewall.</p>
     <div class="box warn">
-      <div class="bt">587 ≠ حل مشكلة الإرسال لبرّا</div>
-      <p>587 هو باب دخول رسائل <strong>عملائك</strong> لسيرفرك (وارد). الإرسال لبرّا (لـGmail) بيمرّ على <span class="tok">25 الصادر</span> — فتفعيل 587 ما بيغيّر شي بموضوع الحجب. الاتنين منفصلين: 587 لراحة عملائك، وفك 25 الصادر لتوصيل البريد فعلياً.</p>
+      <div class="bt">مهم — 587 وفحص المنافذ بيجوا لاحقاً</div>
+      <p>بخطوة ٣ هون <strong>بس بتفتح المنافذ بالجدار الناري (تحضير)</strong>. المنفذ ما بيصير شغّال فعلياً إلا بعد ما <strong>تكمّل المعالج + تضبط Cloudflare/DNS + تعيد التشغيل</strong> (خطوات ٦–٧). عشان هيك <strong>تفعيل 587</strong> و<strong>فحص المنافذ الفعلي</strong> موجودين بعد خطوة ٧ — لأنه فحصهم الآن بيطلّع كلهم «مسكّرين» وهنن لسا ما فتحوا.</p>
     </div>
 
     <h3>جدول منافذ الجدار الناري (Inbound)</h3>
@@ -496,43 +482,13 @@ ufw reload</code></pre>
     </div>
 
     <div class="check">
-      <div class="ct">نقطة فحص ٣ — اختبر كل منفذ فعلياً (مو تفترض)</div>
-      <p style="font-weight:400;font-size:.95rem;margin-bottom:10px">اختبر المنافذ <strong>من برّا السيرفر</strong> (زي ما العالم بيشوفك). الأمر حسب جهازك:</p>
-      <div class="term" style="margin:0 0 12px">
-        <div class="term-bar"><span class="ttl">من macOS (مجرَّب وشغّال)</span><button class="cp">نسخ</button></div>
-<pre><code>for p in 25 143 443 465 587 993 995 4190; do
-  nc -z -G 5 mail.techkahwa.net $p &gt;/dev/null 2&gt;&amp;1 \
-    &amp;&amp; echo "$p OPEN" || echo "$p CLOSED"
-done</code></pre>
-      </div>
-      <div class="term" style="margin:0 0 12px">
-        <div class="term-bar"><span class="ttl">من جهاز/سيرفر لينكس</span><button class="cp">نسخ</button></div>
-<pre><code>for p in 25 143 443 465 587 993 995 4190; do
-  timeout 5 bash -c "echo &gt; /dev/tcp/mail.techkahwa.net/$p" 2&gt;/dev/null \
-    &amp;&amp; echo "$p OPEN" || echo "$p CLOSED"
-done</code></pre>
-      </div>
-      <div class="box warn" style="margin:0 0 12px">
-        <div class="bt">فرق الأوامر — درس مهم</div>
-        <p>أمر <span class="tok">timeout</span> مو موجود على macOS، فأمر لينكس بيفشل عالماك بصمت وبيطلّع كل شي CLOSED غلط. عالماك استعمل <span class="tok">nc -z -G 5</span> (الـ<span class="tok">-G</span> = مهلة الاتصال). أو استعمل موقع <span class="tok">check-host.net/check-tcp</span> من أي جهاز.</p>
-      </div>
-
-      <p style="font-weight:400;font-size:.95rem;margin-bottom:8px"><strong>النتيجة المتوقعة لكل منفذ</strong> — هيك بتعرف شو طبيعي وشو مشكلة:</p>
-      <table class="cmp" style="margin-bottom:14px">
-        <thead><tr><th>منفذ</th><th>المتوقع من برّا</th><th>التفسير</th></tr></thead>
-        <tbody>
-          <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">443 · 465 · 993 · 4190</td><td><strong>OPEN</strong></td><td>الأساسيات: لوحة/webmail، إرسال عملائك، استقبالهم، فلاتر Sieve.</td></tr>
-          <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">995</td><td><strong>OPEN</strong> إذا بدك POP3</td><td><strong>ضروري لربط Gmail</strong> (بيسحب البريد عبر POP3 على 995). لو CLOSED والسيرفر ماسكه → القاعدة ناقصة بجدار Hetzner.</td></tr>
-          <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">25</td><td>لا يُفحص من شبكة منزلية</td><td>مزوّدو الإنترنت المنزلي بيحجبوا 25 من شبكتهم — فحصه من البيت بيطلّع CLOSED دايماً حتى لو سليم. <strong>الدليل الحقيقي: استقبالك للبريد.</strong> أو افحصه من check-host.net.</td></tr>
-          <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">143 · 587</td><td>CLOSED مقبول</td><td>نسخ STARTTLS — Stalwart ما بيفعّلهن افتراضياً، و465/993 بيغنوا عنهن تماماً. تفعيلهن اختياري من Settings → Listeners.</td></tr>
-        </tbody>
-      </table>
+      <div class="ct">نقطة فحص ٣ — تحضير الجدار فقط</div>
       <ul>
-        <li><span class="tok">443</span> و<span class="tok">465</span> و<span class="tok">993</span> و<span class="tok">4190</span> كلهن <span class="tok">OPEN</span> من برّا.</li>
-        <li><span class="tok">995</span> = <span class="tok">OPEN</span> إذا ناوي تربط Gmail عبر POP3.</li>
-        <li>القواعد متطابقة بين Hetzner Cloud Firewall و<span class="tok">ufw</span>، والـOutbound على Hetzner فاضي (Nothing).</li>
+        <li>كل المنافذ مفتوحة Inbound بالجدار (22, 25, 80, 143, 443, 465, 587, 993, 995, 4190, 8080).</li>
+        <li>الـOutbound فاضي (Nothing) — كل الصادر مسموح.</li>
+        <li>اخترت جدار واحد (Hetzner موصى به) وطفّيت التاني.</li>
       </ul>
-      <div class="fail"><b>إذا منفذ CLOSED من برّا بس OPEN من السيرفر نفسه:</b> الحاجب جدار Hetzner Cloud — أضف قاعدته للـInbound. <b>إذا CLOSED من الاتنين:</b> Stalwart مو ماسكه — Settings → Listeners (طبيعي لـ143/587). <b>ومنفذ 25 لا يُحكم عليه من شبكة منزلية.</b></div>
+      <div class="fail"><b>ملاحظة:</b> فتح المنفذ بالجدار مش معناه إنه شغّال — Stalwart لسا ما فتحه. <b>الفحص الفعلي للمنافذ بعد خطوة ٧</b> (بعد المعالج والـrestart).</div>
     </div>
   </section>
 
@@ -550,9 +506,19 @@ sh install.sh</code></pre>
 <pre><code>nano /etc/stalwart/stalwart.env
 <span class="c-dim"># أضف هذا السطر (بدّل كلمة السر بوحدة قوية):</span>
 STALWART_RECOVERY_ADMIN=admin:MyStr0ngRecovery!Pass
-<span class="c-dim"># احفظ (Ctrl+O ثم Enter ثم Ctrl+X) ثم:</span>
-systemctl restart stalwart
-systemctl status stalwart</code></pre>
+<span class="c-dim"># احفظ (Ctrl+O ثم Enter ثم Ctrl+X)</span></code></pre>
+    </div>
+
+    <h3>أعد التشغيل وتأكد إنه شغّال — قبل أي فحص منافذ</h3>
+    <p>بعد التنصيب (وبعد أي تعديل على الإعدادات)، اعمل <strong>restart</strong> ثم تأكد من الحالة. <strong>لا تفحص المنافذ قبل هالخطوة</strong> — الخدمة لازم تكون <span class="tok">active (running)</span> أول.</p>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">restart + status</span><button class="cp">نسخ</button></div>
+<pre><code>systemctl restart stalwart
+systemctl status stalwart      <span class="c-dim"># لازم تشوف: active (running)</span></code></pre>
+    </div>
+    <div class="box tip">
+      <div class="bt">الترتيب الصح</div>
+      <p><span class="tok">restart</span> ← <span class="tok">status</span> (تأكد active) ← <strong>بعدها</strong> فحص المنافذ. فحص المنافذ قبل التأكد إنه شغّال بيعطي نتائج مضلّلة.</p>
     </div>
     <div class="check">
       <div class="ct">نقطة فحص ٤</div>
@@ -701,6 +667,75 @@ ss -tlnp | grep -E ':443|:993|:465'</code></pre>
         <li><span class="tok">https://mail.techkahwa.net</span> بيفتح بدون تحذير، وThunderbird بيتصل بدون "Add Exception".</li>
       </ul>
       <div class="fail"><b>إذا subject= دومين غلط:</b> نفّذ «العلاج» فوق (أضف اسم السيرفر كدومين + صحّح Default Certificate). <b>إذا self-signed:</b> راجع سجل ACME والتوكن. <b>لا تكرّر restart كتير</b> حتى ما تنحظر من Let's Encrypt.</div>
+    </div>
+  </section>
+
+  <!-- P7B PORTS + 587 -->
+  <section class="phase" id="p7b">
+    <div class="ph-head"><div class="ph-n">٧+</div><h2>فعّل 587 + افحص المنافذ فعلياً (بعد المعالج)</h2></div>
+    <p class="ph-sub">الآن بس — بعد ما كمّلت المعالج وضبطت Cloudflare/DNS وأعدت التشغيل — صار Stalwart فاتح الـlisteners فعلاً، فبنقدر نفعّل 587 ونفحص المنافذ. <strong>قبل هالنقطة الفحص بيطلّع نتائج مضلّلة.</strong></p>
+
+    <h3>أ) فعّل منفذ 587 (اختياري — لعملاء STARTTLS)</h3>
+    <p>Stalwart بيجي مفعّل عليه 465/993 (implicit TLS) بس، ومو مشغّل 587/143 (STARTTLS). لو عندك عملاء بتتوقع 587 (شائع بالشركات)، فعّله:</p>
+    <div class="box loc">
+      <div class="bt">باللوحة: Settings → Network → Listeners → Create</div>
+      <ul>
+        <li><strong>ID:</strong> <span class="tok">submission</span> · <strong>Protocol:</strong> <span class="tok">smtp</span></li>
+        <li><strong>Bind:</strong> <span class="tok">[::]:587</span></li>
+        <li><strong>Implicit TLS:</strong> <strong>OFF</strong> (587 بيستعمل STARTTLS، مو تشفير مباشر)</li>
+        <li>احفظ</li>
+      </ul>
+    </div>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">أعد التشغيل وتأكد</span><button class="cp">نسخ</button></div>
+<pre><code>systemctl restart stalwart
+ss -tlnp | grep ':587'     <span class="c-dim"># لازم يظهر LISTEN</span></code></pre>
+    </div>
+    <p>وتأكد إنه مفتوح بالجدار كمان (كان محضّر بخطوة ٣): قاعدة Inbound TCP 587.</p>
+    <div class="box warn">
+      <div class="bt">587 ≠ حل مشكلة الإرسال لبرّا</div>
+      <p>587 هو باب دخول رسائل <strong>عملائك</strong> لسيرفرك (وارد). الإرسال لبرّا (لـGmail) بيمرّ على <span class="tok">25 الصادر</span> — فتفعيل 587 ما بيغيّر شي بموضوع الحجب. الاتنين منفصلين.</p>
+    </div>
+
+    <h3>ب) افحص كل منفذ فعلياً (مو تفترض)</h3>
+    <p style="font-weight:400;font-size:.95rem;margin-bottom:10px">اختبر المنافذ <strong>من برّا السيرفر</strong> (زي ما العالم بيشوفك). الأمر حسب جهازك:</p>
+    <div class="term" style="margin:0 0 12px">
+      <div class="term-bar"><span class="ttl">من macOS (مجرَّب وشغّال)</span><button class="cp">نسخ</button></div>
+<pre><code>for p in 25 143 443 465 587 993 995 4190; do
+  nc -z -G 5 mail.techkahwa.net $p &gt;/dev/null 2&gt;&amp;1 \
+    &amp;&amp; echo "$p OPEN" || echo "$p CLOSED"
+done</code></pre>
+    </div>
+    <div class="term" style="margin:0 0 12px">
+      <div class="term-bar"><span class="ttl">من جهاز/سيرفر لينكس</span><button class="cp">نسخ</button></div>
+<pre><code>for p in 25 143 443 465 587 993 995 4190; do
+  timeout 5 bash -c "echo &gt; /dev/tcp/mail.techkahwa.net/$p" 2&gt;/dev/null \
+    &amp;&amp; echo "$p OPEN" || echo "$p CLOSED"
+done</code></pre>
+    </div>
+    <div class="box warn" style="margin:0 0 12px">
+      <div class="bt">فرق الأوامر — درس مهم</div>
+      <p>أمر <span class="tok">timeout</span> مو موجود على macOS، فأمر لينكس بيفشل عالماك بصمت وبيطلّع كل شي CLOSED غلط. عالماك استعمل <span class="tok">nc -z -G 5</span> (الـ<span class="tok">-G</span> = مهلة الاتصال). أو استعمل موقع <span class="tok">check-host.net/check-tcp</span> من أي جهاز.</p>
+    </div>
+    <p style="font-weight:400;font-size:.95rem;margin-bottom:8px"><strong>النتيجة المتوقعة لكل منفذ</strong> — هيك بتعرف شو طبيعي وشو مشكلة:</p>
+    <table class="cmp" style="margin-bottom:14px">
+      <thead><tr><th>منفذ</th><th>المتوقع من برّا</th><th>التفسير</th></tr></thead>
+      <tbody>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">443 · 465 · 993 · 4190</td><td><strong>OPEN</strong></td><td>الأساسيات: لوحة/webmail، إرسال عملائك، استقبالهم، فلاتر Sieve.</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">587</td><td><strong>OPEN</strong> لو فعّلته فوق</td><td>إرسال عملائك بـSTARTTLS.</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">995</td><td><strong>OPEN</strong> إذا بدك POP3</td><td><strong>ضروري لربط Gmail</strong> (بيسحب البريد عبر POP3 على 995). لو CLOSED والسيرفر ماسكه → القاعدة ناقصة بجدار Hetzner.</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">25</td><td>لا يُفحص من شبكة منزلية</td><td>مزوّدو الإنترنت المنزلي بيحجبوا 25 من شبكتهم — فحصه من البيت بيطلّع CLOSED دايماً حتى لو سليم. <strong>الدليل الحقيقي: استقبالك للبريد.</strong> أو افحصه من check-host.net.</td></tr>
+        <tr><td class="k mono" style="font-family:var(--mono);direction:ltr">143</td><td>CLOSED مقبول</td><td>IMAP STARTTLS — 993 بيغني عنه. تفعيله اختياري من Listeners.</td></tr>
+      </tbody>
+    </table>
+    <div class="check">
+      <div class="ct">نقطة فحص ٧+ — المنافذ فعلياً</div>
+      <ul>
+        <li><span class="tok">443</span> و<span class="tok">465</span> و<span class="tok">993</span> و<span class="tok">4190</span> كلهن <span class="tok">OPEN</span> من برّا.</li>
+        <li><span class="tok">587</span> = OPEN لو فعّلته، و<span class="tok">995</span> = OPEN لو بدك ربط Gmail.</li>
+        <li>لو استعملت جدارين: القواعد متطابقة، والـOutbound فاضي.</li>
+      </ul>
+      <div class="fail"><b>CLOSED من برّا بس OPEN من السيرفر (<span class="tok">ss -tlnp</span>):</b> الحاجب جدار Hetzner — أضف القاعدة Inbound. <b>CLOSED من الاتنين:</b> Stalwart مو ماسكه — Settings → Listeners (طبيعي لـ143؛ ولـ587 فعّله فوق). <b>منفذ 25 لا يُحكم عليه من شبكة منزلية.</b></div>
     </div>
   </section>
 
@@ -1004,6 +1039,125 @@ timeout 5 bash -c "echo &gt; /dev/tcp/mta5.am0.yahoodns.net/25" 2&gt;/dev/null \
         <li>كل دوميناتك مضافة وسجلاتها منشورة وصحيحة.</li>
         <li>Backups مفعّلة.</li>
         <li>عم تبعت بالتدريج وتراقب السمعة.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- P13 ORDER -->
+  <section class="phase" id="p13">
+    <div class="ph-head"><div class="ph-n">١٣</div><h2>التسلسل المنطقي الكامل للإعداد (خلاصة عملية)</h2></div>
+    <p class="ph-sub">هاد الترتيب الصح مبني على التجربة الفعلية — نقطة الفحص الأساسية إنك <strong>ما تقدر تفحص المنافذ إلا بعد ما تكمّل المعالج وتعيد التشغيل</strong>، لأنه قبلها Stalwart ما بيكون فاتح كل الـlisteners.</p>
+    <ol class="steps">
+      <li><strong>سيرفر Hetzner + PTR</strong> (خطوة ١)</li>
+      <li><strong>سجل A + رمادي</strong> بـCloudflare (خطوة ٢)</li>
+      <li><strong>الجدار الناري</strong> — افتح كل المنافذ Inbound (خطوة ٣). <span class="tok">ملاحظة: الفتح بالجدار مش معناه المنفذ شغّال — لسا Stalwart ما فتحه</span></li>
+      <li><strong>تنصيب Stalwart + حساب طوارئ</strong> (خطوة ٤)</li>
+      <li><strong>تحقّق توكن Cloudflare</strong> (خطوة ٥)</li>
+      <li><strong>أكمل المعالج (٥ خطوات):</strong> Default Domain + ربط Cloudflare DNS بالتوكن (خطوة ٦)</li>
+      <li><strong>أعد تشغيل النظام</strong> — <span class="tok">systemctl restart stalwart</span> ← هون بس بتفتح كل الـlisteners فعلياً</li>
+      <li><strong>الآن افحص المنافذ</strong> — نزّل الإيميل على جهازك أول وكمّل إعداده، وبعدها تفحص المنافذ من برّا (خطوة ٣ — قسم الفحص)</li>
+      <li><strong>افحص الشهادة</strong> — لازم تطابق اسم السيرفر (خطوة ٧)</li>
+      <li><strong>سجلات DNS:</strong> تأكد من نشرها، و<strong>أضف MX يدوي</strong> (مش بينضاف أول مرة — خطوة ٨)</li>
+      <li><strong>فعّل 587 يدوياً</strong> (مش بينضاف تلقائياً) + <span class="tok">restart</span> مرة تانية</li>
+      <li><strong>أنشئ الحسابات + افتح البريد + اختبر الإرسال</strong> (خطوات ٩–١٠)</li>
+    </ol>
+    <div class="box warn">
+      <div class="bt">القاعدة الذهبية للفحص</div>
+      <p>ترتيب الفحص الصح: <strong>أكمل المعالج → restart → نزّل الإيميل واعمل setup على جهازك → بعدها افحص المنافذ من برّا</strong>. لو فحصت قبل الـrestart، رح تلاقي منافذ «مسكّرة» وهي فعلياً مش مفتوحة بعد.</p>
+    </div>
+    <div class="box danger">
+      <div class="bt">درس مهم: رسائل عالقة رغم إنه كل شي مضبوط</div>
+      <p>لو الرسائل عالقة بالطابور (Next Retry) ومنفذ 25 الصادر مفتوح والإعداد سليم — معالج الطابور ممكن يكون علِق بعد تعديلات/restarts متتالية. <strong>الحل الأول: <span class="tok">systemctl restart stalwart</span></strong>. غالباً بينطلق الطابور فوراً. وتجنّب عدة restarts سريعة متتالية.</p>
+    </div>
+  </section>
+
+  <!-- P14 NEW DOMAIN -->
+  <section class="phase" id="p14">
+    <div class="ph-head"><div class="ph-n">١٤</div><h2>عند إضافة دومين جديد — قائمة كاملة</h2></div>
+    <p class="ph-sub">كل مرة تضيف دومين (من الـ٢٠)، اعمل هالخطوات بالترتيب وتأكد منها.</p>
+    <ol class="steps">
+      <li><strong>Directory → Domains → Create domain</strong> → اكتب الدومين (مثلاً <span class="tok">domain2.com</span>).</li>
+      <li>اضغط على الدومين → قسم <strong>DNS</strong> → خلّي <strong>DNS Management = Automatic</strong>، والـ<strong>DNS Server</strong> = مزوّدك (مثلاً <span class="tok">ehab</span> / Cloudflare اللي ضبطته).</li>
+      <li>قسم <strong>Record Types</strong>: تأكد إنه مفعّل عليها كلها (Autoconfig, Autodiscover, CAA, DKIM, DMARC, MTA-STS, MX, SPF, SRV, TLS-RPT) — هاي اللي بتخلّي الأجهزة تكتشف الإعدادات لحالها.</li>
+      <li>قسم <strong>TLS</strong> → <strong>Certificate Management = ACME</strong>، والـProvider = <span class="tok">Let's Encrypt</span>.</li>
+      <li><strong>أضف MX يدوياً بـCloudflare</strong> — لأنه Stalwart ما بينشره أول مرة: Type <span class="tok">MX</span> · Name <span class="tok">@</span> · Server <span class="tok">mail.techkahwa.net</span> · Priority <span class="tok">10</span> · رمادي.</li>
+      <li>أنشئ حسابات الدومين من <strong>Directory → Accounts</strong>.</li>
+      <li>تأكد كل السجلات <strong>رمادية (DNS only)</strong> بـCloudflare.</li>
+    </ol>
+    <div class="box tip">
+      <div class="bt">مصطلحات الشاشة (من التجربة)</div>
+      <ul>
+        <li><strong>Zone Origin</strong> (اختياري): لو الدومين subdomain (<span class="tok">sub.example.com</span>) وسجلاته تُدار بزون <span class="tok">example.com</span>، حط الأصل هنا. للدومين العادي اتركه فاضي.</li>
+        <li><strong>Additional Hostnames (SANs)</strong> بقسم TLS: أسماء إضافية للشهادة (مثل <span class="tok">mta-sts</span>, <span class="tok">autoconfig</span>). اتركه فاضي لتاخد wildcard أو الافتراضي.</li>
+      </ul>
+    </div>
+    <div class="term">
+      <div class="term-bar"><span class="ttl">تحقّق سجلات الدومين الجديد</span><button class="cp">نسخ</button></div>
+<pre><code>dig +short MX domain2.com                    <span class="c-dim"># → 10 mail.techkahwa.net (أضفه يدوي لو فاضي)</span>
+dig +short TXT domain2.com                   <span class="c-dim"># SPF</span>
+dig +short TXT _dmarc.domain2.com            <span class="c-dim"># DMARC</span>
+dig +short SRV _imaps._tcp.domain2.com       <span class="c-dim"># اكتشاف تلقائي للأجهزة</span></code></pre>
+    </div>
+    <div class="check">
+      <div class="ct">نقطة فحص ١٤ — لكل دومين جديد</div>
+      <ul>
+        <li>DNS Management = Automatic، وTLS = ACME.</li>
+        <li>كل Record Types مفعّلة.</li>
+        <li><strong>MX مضاف يدوياً</strong> ويأشّر على اسم السيرفر.</li>
+        <li>كل السجلات رمادية، والاختبار على <span class="tok">mail-tester.com</span> = <strong>10/10</strong>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- P15 DEVICE SETUP -->
+  <section class="phase" id="p15">
+    <div class="ph-head"><div class="ph-n">١٥</div><h2>إضافة البريد على الأجهزة (iPhone + Gmail)</h2></div>
+    <p class="ph-sub">وجّه عملاءك للتطبيق المدمج — بيكتشف الإعدادات لحاله من سجلاتك (autoconfig/SRV). لو طلب إعدادات يدوية، هي القيم.</p>
+
+    <div class="box tip">
+      <div class="bt">الإعدادات الموحّدة (احفظها — تنفع أي جهاز)</div>
+      <ul>
+        <li><strong>Incoming (استقبال):</strong> Host <span class="tok">mail.techkahwa.net</span> · Port <span class="tok">993</span> · <span class="tok">SSL/TLS</span> · IMAP</li>
+        <li><strong>Outgoing (إرسال):</strong> Host <span class="tok">mail.techkahwa.net</span> · Port <span class="tok">465</span> (SSL) أو <span class="tok">587</span> (STARTTLS)</li>
+        <li><strong>Username:</strong> الإيميل الكامل (نفسه للاستقبال والإرسال)</li>
+        <li><strong>Password:</strong> كلمة سر الحساب (نفسها للاثنين)</li>
+      </ul>
+    </div>
+
+    <h3>على iPhone (Apple Mail) — الأنصح</h3>
+    <ol class="steps">
+      <li>Settings → <strong>Mail</strong> → <strong>Accounts</strong> → <strong>Add Account</strong> → <strong>Other</strong> → <strong>Add Mail Account</strong>.</li>
+      <li>اكتب: Name · Email (<span class="tok">ehab@ehabkahwati.com</span>) · Password · Description → Next.</li>
+      <li>يحاول يكتشف تلقائياً. لو طلب يدوي، اختار تبويب <strong>IMAP</strong>، وبيسألك <strong>Incoming</strong> و<strong>Outgoing</strong> بشكل منفصل — <strong>لازم تكرّر اسم السيرفر بالمكانين</strong>:
+        <span class="d">Incoming Host: <span class="tok">mail.techkahwa.net</span> · Outgoing Host: <span class="tok">mail.techkahwa.net</span> (نفسه)</span></li>
+      <li>Username + Password <strong>نفسهم بالمكانين</strong> (Incoming و Outgoing).</li>
+      <li>Next → بيتحقق (Verifying) → Save.</li>
+    </ol>
+    <div class="box warn">
+      <div class="bt">نقطة تلبّس على iPhone</div>
+      <p>الآيفون بيطلب <strong>Host Name مرتين</strong> — مرة بـIncoming ومرة بـOutgoing — ونفس <strong>الـUsername والPassword</strong> بالمكانين. مش غلط، هيك بيشتغل. حط <span class="tok">mail.techkahwa.net</span> بالاثنين.</p>
+    </div>
+
+    <h3>على تطبيق Gmail (آيفون/أندرويد)</h3>
+    <ol class="steps">
+      <li>Gmail app → قائمة → Settings → <strong>Add account</strong> → <strong>Other</strong> → اكتب الإيميل → <strong>Manual setup</strong>.</li>
+      <li>اختار <strong>Personal (IMAP)</strong>.</li>
+      <li><strong>Incoming server settings:</strong> Username = الإيميل · Password · IMAP server <span class="tok">mail.techkahwa.net</span> · Port <span class="tok">993</span> · Security <span class="tok">SSL/TLS</span>.</li>
+      <li><strong>Outgoing server settings:</strong> Username = الإيميل · Password · SMTP server <span class="tok">mail.techkahwa.net</span> · Port <span class="tok">465</span> + <span class="tok">SSL/TLS</span> (أو <span class="tok">587</span> + <span class="tok">STARTTLS</span>).</li>
+      <li>Next → بيتحقق → تم.</li>
+    </ol>
+    <div class="box tip">
+      <div class="bt">للاكتشاف التلقائي يشتغل مضمون</div>
+      <ul>
+        <li>الشهادة لازم تطابق <span class="tok">mail.techkahwa.net</span> (خطوة ٧) — وإلا التطبيقات ترفض الاكتشاف.</li>
+        <li>سجلات <span class="tok">autoconfig</span> و<span class="tok">SRV</span> منشورة لدومين العميل (بتننشر تلقائياً مع Cloudflare).</li>
+      </ul>
+    </div>
+    <div class="check">
+      <div class="ct">نقطة فحص ١٥</div>
+      <ul>
+        <li>الجهاز اتصل بدون تحذير شهادة، وزامن الرسائل.</li>
+        <li>أرسلت رسالة تجربة من الجهاز ووصلت.</li>
       </ul>
     </div>
   </section>
